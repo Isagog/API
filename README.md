@@ -36,3 +36,13 @@ Install the Isagog API client running:
 ```
 
 This script creates a folder named `build`, containing the source code of the generated client, and install it in your local Maven repository.
+
+## Import with Maven
+
+```xml
+<dependency>
+    <groupId>com.isagog</groupId>
+    <artifactId>api</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
