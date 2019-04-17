@@ -1,12 +1,13 @@
 #! /bin/sh
 
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 then
-    echo "Required 1 argument: <output_dir>"
+    echo "Required 2 arguments: <output_dir> <artifact_version>"
     exit
 fi
 
 OUTPUT_DIR=$1
+VERSION=$2
 
 wget https://raw.githubusercontent.com/KotlinNLP/NLPServer/api-doc-simple/openapi.yaml -O isagog-nlp.yaml
 
@@ -16,5 +17,6 @@ openapi-generator generate \
  -o $OUTPUT_DIR \
  --group-id com.isagog \
  --artifact-id api \
+ --artifact-version $VERSION \
  --api-package com.isagog.api.nlp \
  --model-package com.isagog.api.model
