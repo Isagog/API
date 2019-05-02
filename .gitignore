@@ -1,5 +1,5 @@
 # Auto-generated build folder
-build/
+client/build/
 
 # NLP YAML (it is auto-generated)
 isagog-nlp.yaml
