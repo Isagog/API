@@ -1,8 +1,8 @@
-# Isagog API Client Generator
+# Isagog API
 
-Generate the client of the Isagog API.
+All the definitions and generators of the Isagog APIs.
 
-## Getting Started
+## Client Generation
 
 ### Requirements
 
@@ -17,24 +17,17 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/i
 brew install openapi-generator
 ```
 
-### Resources
+### Clients generation
 
-Download the OpenAPI YAML files that define the APIs of the following modules:
+Generate the API clients for each microservice running the scripts in the `client` folder named `generate_*`.
 
-* `KS`: Download the YAML file [here](https://github.com/Isagog/KnowledgeService) 
-and put it under the root of this project as `isagog-ks.yaml`
 
-* `DQA`: Download the YAML file [here](https://github.com/Isagog/DQA) 
-and put it under the root of this project as `isagog-dqa.yaml`
+### Installation
 
-* `Dialog Manager`: Download the YAML file [here](https://github.com/Isagog/DialogManager) 
-and put it under the root of this project as `isagog-dm.yaml`
-
-## Installation
-
-Install the Isagog API client running:
+Install the complete Isagog API client (including all the microservices) running:
 
 ```bash
+cd client
 ./INSTALL.sh
 ```
 
