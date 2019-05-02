@@ -27,6 +27,9 @@ and put it under the root of this project as `isagog-ks.yaml`
 * `DQA`: Download the YAML file [here](https://github.com/Isagog/DQA) 
 and put it under the root of this project as `isagog-dqa.yaml`
 
+* `Dialog Manager`: Download the YAML file [here](https://github.com/Isagog/DialogManager) 
+and put it under the root of this project as `isagog-dm.yaml`
+
 ## Installation
 
 Install the Isagog API client running:

@@ -11,6 +11,7 @@ fi
 ./generate_nlp_api_client.sh $OUTPUT_DIR $VERSION
 ./generate_ks_api_client.sh $OUTPUT_DIR $VERSION
 ./generate_dqa_api_client.sh $OUTPUT_DIR $VERSION
+./generate_dm_api_client.sh $OUTPUT_DIR $VERSION
 
 cd $OUTPUT_DIR
 mvn clean install
