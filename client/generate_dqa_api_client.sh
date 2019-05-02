@@ -10,7 +10,7 @@ OUTPUT_DIR=$1
 VERSION=$2
 
 openapi-generator generate \
- -i isagog-dqa.yaml \
+ -i ../isagog-dqa.yaml \
  -g java \
  -o $OUTPUT_DIR \
  --group-id com.isagog \

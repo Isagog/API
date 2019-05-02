@@ -9,10 +9,10 @@ fi
 OUTPUT_DIR=$1
 VERSION=$2
 
-wget https://raw.githubusercontent.com/KotlinNLP/NLPServer/api-doc-simple/openapi.yaml -O isagog-nlp.yaml
+wget https://raw.githubusercontent.com/KotlinNLP/NLPServer/api-doc-simple/openapi.yaml -O ../isagog-nlp.yaml
 
 openapi-generator generate \
- -i isagog-nlp.yaml \
+ -i ../isagog-nlp.yaml \
  -g java \
  -o $OUTPUT_DIR \
  --group-id com.isagog \

@@ -11,7 +11,7 @@ VERSION=$2
 
 openapi-generator generate \
  --skip-validate-spec \
- -i isagog-dm.yaml \
+ -i ../isagog-dm.yaml \
  -g java \
  -o $OUTPUT_DIR \
  --group-id com.isagog \
