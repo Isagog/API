@@ -1,0 +1,60 @@
+openapi: 3.0.0
+info:
+  title: Documental Question Answering
+  version: 1.0.0
+  description: >-
+    Documental Question Answering Server. Receives questions, searches
+    document collections for answers, and returns them back.
+    
+servers:
+  - url: "http://localhost/v1"
+    variables:
+      port:
+        default: "4000"
+
+paths:
+  /AskQuestion:
+    post:
+      summary: Returns answers to a natural language question
+      parameters:
+        - in : query
+          name: text
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Found list of candidate answers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnswerList'        
+        '500':
+          description: Answer not found
+          
+components:
+  schemas:
+    AnswerList:
+      description: Ranked List of Candidate Answers
+      type: array
+      items:
+        $ref: "#/components/schemas/Answer"
+
+    Answer:
+      description: Candidate Answer
+      type: object
+      required:
+        - text
+        - docref
+        - score      
+      properties:
+        text:
+          description: Answer Text
+          type: string
+        docref:
+          description: Pathname of the Source Document
+          type: string
+        score:
+          description: Confidence Score for the Answer
+          type: number
+          format: float

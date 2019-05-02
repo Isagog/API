@@ -1,6 +1,5 @@
 # Auto-generated build folder
 build/
 
-# YAML files
-*.yaml
-*.yml
+# NLP YAML (it is auto-generated)
+isagog-nlp.yaml
