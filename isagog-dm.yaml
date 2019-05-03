@@ -214,7 +214,7 @@ components:
           required:
             - "results"
           properties:
-            name:
+            results:
               type: "array"
               items:
                 $ref: "#/components/schemas/Result"
