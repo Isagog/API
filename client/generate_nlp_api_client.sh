@@ -22,3 +22,10 @@ openapi-generator generate \
  --artifact-version $VERSION \
  --api-package com.isagog.api.nlp \
  --model-package com.isagog.api.model
+
+JSON_JAVA_FILE="$OUTPUT_DIR/src/main/java/com/isagog/api/JSON.java"
+DISCRIMINATOR_TMP_FILE="$OUTPUT_DIR/discriminators.tmp"
+DISCRIMINATOR_IMPORT_TMP_FILE="$OUTPUT_DIR/discriminator_imports.tmp"
+
+python print_discriminator_registration.py $JSON_JAVA_FILE >> $DISCRIMINATOR_TMP_FILE
+grep "import com.isagog.api..*" $JSON_JAVA_FILE >> $DISCRIMINATOR_IMPORT_TMP_FILE

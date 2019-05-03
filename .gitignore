@@ -2,6 +2,12 @@
 **/.idea/
 **/out/
 
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Auto-generated build folder
 client/build/
 
