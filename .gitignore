@@ -1,3 +1,7 @@
+### Intellij ###
+**/.idea/
+**/out/
+
 # Auto-generated build folder
 client/build/
 
