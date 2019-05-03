@@ -6,15 +6,29 @@ All the definitions and generators of the Isagog APIs.
 
 ### Requirements
 
-* Install `Homebrew`:
+#### Homebrew
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
 
 ```
 
-* Install `OpenAPI Generator`:
+#### OpenAPI Generator
 ```bash
 brew install openapi-generator
+```
+
+#### Python 3.6
+
+On Ubuntu 14.04 and 16.04:
+```bash
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install python3.6
+```
+
+On Ubuntu 16.10 and 17.04:
+```bash
+sudo apt-get install python3.6
 ```
 
 ### Clients generation
