@@ -9,7 +9,7 @@ fi
 OUTPUT_DIR=$1
 VERSION=$2
 
-wget https://raw.githubusercontent.com/KotlinNLP/NLPServer/api-doc-simple/openapi.yaml -O ../isagog-nlp.yaml
+wget https://raw.githubusercontent.com/KotlinNLP/NLPServer/api-doc/openapi.yaml -O ../isagog-nlp.yaml
 
 JAVA_POST_PROCESS_FILE="/usr/local/bin/clang-format -i"
 
