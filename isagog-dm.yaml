@@ -35,6 +35,8 @@ paths:
       operationId: "closeSession"
       parameters:
         - $ref: "#/components/parameters/SessionId"
+      requestBody:
+        $ref: "#/components/requestBodies/UserFeedback"
       responses:
         200:
           $ref: "#/components/responses/Confirmation"
@@ -126,6 +128,13 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/InputSelection"
+    UserFeedback:
+      description: "The feedback of the user for the current dialog session"
+      required: false
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserFeedback"
   parameters:
     SessionId:
       name: "sessionId"
@@ -170,6 +179,25 @@ components:
           schema:
             $ref: "#/components/schemas/Response"
   schemas:
+    UserFeedback:
+      type: "object"
+      required:
+        - "rating"
+      properties:
+        rating:
+          type: "integer"
+          format: "int32"
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+            - 10
     AlphaNumId:
       type: "string"
       minLength: 10
