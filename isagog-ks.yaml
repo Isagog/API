@@ -885,6 +885,8 @@ components:
            - sentence
        properties:
            sentence:
+             type: string           
+           analysis:
              $ref: 'isagog-nlp.yaml#/components/schemas/NLPAnalysis'
            concepts:
              type: array
