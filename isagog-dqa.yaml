@@ -6,10 +6,12 @@ info:
     Documental Question Answering Server. Receives questions, searches
     document collections for answers, and returns them back.
 servers:
-  - url: "http://localhost/v1"
+  - url: "http://localhost"
     variables:
       port:
         default: "4000"
+      basePath:
+        default: "/v1"
 paths:
   /AskQuestion:
     post:
