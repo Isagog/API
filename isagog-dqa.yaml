@@ -9,7 +9,7 @@ servers:
   - url: "http://localhost"
     variables:
       port:
-        default: "4000"
+        default: "3300"
       basePath:
         default: "/v1"
 paths:

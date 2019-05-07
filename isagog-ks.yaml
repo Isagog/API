@@ -1,6 +1,11 @@
 openapi: 3.0.2
 servers:
-  - url: 'http://localhost:3001'
+  - url: "http://localhost"
+    variables:
+      port:
+        default: "3200"
+      basePath:
+        default: "/"
 info:
   description: Isagog Knowledge Service.
   version: 1.1.7
