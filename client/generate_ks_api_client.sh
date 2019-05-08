@@ -1,5 +1,7 @@
 #! /bin/sh
 
+set -e
+
 if [ $# -ne 2 ]
 then
     echo "Required 2 arguments: <output_dir> <artifact_version>"
