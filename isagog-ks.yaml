@@ -742,10 +742,13 @@ components:
       required:
        - id
        - ftype
+       - intent
        - slots
       properties:
         id:
           type: string
+        intent:
+          type: string          
         ftype:
           type: string
           enum:
