@@ -170,7 +170,8 @@ components:
       description: "the category threshold"
       required: true
       schema:
-        type: "float"
+        type: "number"
+        format: "double"
     Question:
       name: "question"
       in: "query"
@@ -255,7 +256,7 @@ components:
         threshold:
           description: "Threshold score for the Category"
           type: "number"
-          format: "float"
+          format: "double"
     SourcesList:
       description: "List of Sources"
       type: "array"
@@ -295,7 +296,8 @@ components:
           type: "string"
         score:
           description: "Faq Score"
-          type: "float"
+          type: "number"
+          format: "double"
         question:
           description: "The question of the Faq"
           type: "string"
