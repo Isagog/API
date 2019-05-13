@@ -13,6 +13,7 @@ fi
 ./generate_nlp_api_client.sh $OUTPUT_DIR $VERSION
 ./generate_ks_api_client.sh $OUTPUT_DIR $VERSION
 ./generate_dqa_api_client.sh $OUTPUT_DIR $VERSION
+./generate_faq_api_client.sh $OUTPUT_DIR $VERSION
 ./generate_dm_api_client.sh $OUTPUT_DIR $VERSION
 
 JSON_JAVA_FILE="$OUTPUT_DIR/src/main/java/com/isagog/api/JSON.java"

@@ -1,0 +1,401 @@
+openapi: 3.0.0
+info:
+  description: "This is the faq-system agent of the Isagog Faq System (DQA)."
+  version: "1.0.0"
+  title: "Isagog Faq System"
+  contact:
+    email: "admin@isagog.com"
+servers:
+  - url: "http://localhost"
+    variables:
+      port:
+        default: "3500"
+      basePath:
+        default: "/"
+tags:
+  - name: "faq"
+    description: "Manage the faq system"
+
+paths:
+  /categories:
+    get:
+      tags:
+        - "faq"
+      summary: "Returns the list of all categories"
+      operationId: "categories"
+      responses:
+        '200':
+          description: "List of categories"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesList'
+
+  /categories/{categoryId}:
+    post:
+      tags:
+        - "faq"
+      summary: "Update threshold value"
+      operationId: "updateThreshold"
+      parameters:
+        - $ref: "#/components/parameters/CategoryId"
+        - $ref: "#/components/parameters/Threshold"
+      responses:
+        '200':
+          description: "Updated Category"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+
+  /sources:
+    get:
+      tags:
+        - "faq"
+      summary: "Returns the list of all sources"
+      operationId: "sources"
+      responses:
+        '200':
+          description: "List of sources"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourcesList'
+
+  /faqs/compare:
+    get:
+      tags:
+        - "faq"
+      summary: "Compare and search the similar faqs"
+      operationId: "compare"
+      parameters:
+        - $ref: "#/components/parameters/Question"
+        - $ref: "#/components/parameters/Confidence"
+        - $ref: "#/components/parameters/Category"
+        - $ref: "#/components/parameters/Source"
+      responses:
+        '200':
+          description: "List of similar faqs"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaqsList'
+
+  /faqs/search:
+    get:
+      tags:
+        - "faq"
+      summary: "Returns the faqs list"
+      operationId: "faqs"
+      parameters:
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/From"
+      responses:
+        '200':
+          description: "List of faqs"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaqsList'
+
+  /faqs/add:
+    post:
+      tags:
+        - "faq"
+      summary: "Add faqs"
+      operationId: "addFaqs"
+      requestBody:
+        $ref: "#/components/requestBodies/AddFaqs"
+      responses:
+        '200':
+          description: "List of added faqs"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddedFaqsList'
+
+  /faqs/{faqId}:
+    post:
+      tags:
+        - "faq"
+      summary: "Update faq"
+      operationId: "updateFaq"
+      parameters:
+        - $ref: "#/components/parameters/FaqId"
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateFaq'
+      responses:
+        '200':
+          description: "Updated Faq"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedFaq'
+
+  /faqs/{faqId}/delete:
+    delete:
+      tags:
+        - "faq"
+      summary: "Delete faq"
+      operationId: "deleteFaq"
+      parameters:
+        - $ref: "#/components/parameters/FaqId"
+      responses:
+        '200':
+          description: "Deleted Faq id"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedFaq'
+
+components:
+  parameters:
+    FaqId:
+      name: "faqId"
+      in: "path"
+      description: "the Faq ID"
+      required: true
+      schema:
+        type: "string"
+    CategoryId:
+      name: "categoryId"
+      in: "path"
+      description: "the category ID"
+      required: true
+      schema:
+        type: "string"
+    Threshold:
+      name: "threshold"
+      in: "query"
+      description: "the category threshold"
+      required: true
+      schema:
+        type: "float"
+    Question:
+      name: "question"
+      in: "query"
+      description: "The question to search"
+      required: true
+      schema:
+        type: "string"
+    Confidence:
+      name: "confidence"
+      in: "query"
+      description: "A boolean parameter to fetch only the faqs that pass the category threshold."
+      required: true
+      schema:
+        type: "boolean"
+        default: true
+    Category:
+      name: "category"
+      in: "query"
+      description: "The category filter. To fetch only the faqs of this category."
+      required: false
+      schema:
+        type: "string"
+    Source:
+      name: "source"
+      in: "query"
+      description: "The source filter. To fetch only the faqs of this source."
+      required: false
+      schema:
+        type: "string"
+    Size:
+      name: "size"
+      in: "query"
+      description: "The number of faqs to return."
+      required: true
+      schema:
+        type: "integer"
+        minimum: 1
+        maximum: 50
+    From:
+      name: "from"
+      in: "query"
+      description: "The number of faqs to skip before starting to collect the result set."
+      required: true
+      schema:
+        type: "integer"
+        minimum: 0
+  requestBodies:
+    AddFaqs:
+      description: "The body to add new faqs"
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AddFaqs'
+    UpdateFaq:
+      description: "The body to update faq"
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateFaq'
+  schemas:
+    CategoriesList:
+      description: "List of Categories"
+      type: "array"
+      items:
+        $ref: "#/components/schemas/Category"
+    Category:
+      description: "Category Attributes"
+      type: "object"
+      required:
+        - "id"
+        - "name"
+        - "threshold"
+      properties:
+        id:
+          description: "Category ID"
+          type: "string"
+        name:
+          description: "Category name"
+          type: "string"
+        threshold:
+          description: "Threshold score for the Category"
+          type: "number"
+          format: "float"
+    SourcesList:
+      description: "List of Sources"
+      type: "array"
+      items:
+        $ref: "#/components/schemas/Source"
+    Source:
+      description: "Source Attributes"
+      type: "object"
+      required:
+        - "id"
+        - "name"
+      properties:
+        id:
+          description: "Source ID"
+          type: "string"
+        name:
+          description: "Source name"
+          type: "string"
+    FaqsList:
+      description: "List of Faqs"
+      type: "array"
+      items:
+        $ref: "#/components/schemas/Faq"
+    Faq:
+      description: "Faq Attributes"
+      type: "object"
+      required:
+        - "id"
+        - "score"
+        - "question"
+        - "answer"
+        - "source"
+        - "category"
+      properties:
+        id:
+          description: "Faq ID"
+          type: "string"
+        score:
+          description: "Faq Score"
+          type: "float"
+        question:
+          description: "The question of the Faq"
+          type: "string"
+        answer:
+          description: "The answer of the Faq"
+          type: "string"
+        source:
+          description: "The source of the Faq"
+          type: "string"
+        category:
+          description: "The category of the Faq"
+          type: "string"
+        varified_at:
+          description: "The verification date of the Faq"
+          type: "string"
+    AddFaqs:
+      description: "List of Faqs to add"
+      type: "array"
+      items:
+        $ref: '#/components/schemas/AddFaq'
+    AddFaq:
+      type: "object"
+      required:
+        - "question"
+        - "answer"
+        - "category"
+        - "source"
+      properties:
+        question:
+          type: "string"
+        answer:
+          type: "string"
+        category:
+          type: "string"
+        source:
+          type: "string"
+        verified_at:
+          type: "string"
+          format: "date-time"
+          example: "2017-07-21T17:32:28Z"
+    UpdateFaq:
+      type: "object"
+      properties:
+        question:
+          type: "string"
+        answer:
+          type: "string"
+        category:
+          type: "string"
+        source:
+          type: "string"
+        verified_at:
+          type: "string"
+          format: "date-time"
+          example: "2017-07-21T17:32:28Z"
+    AddedFaqsList:
+      description: "List of added Faqs"
+      type: "array"
+      items:
+        $ref: "#/components/schemas/AddedFaq"
+    AddedFaq:
+      description: "Faq added"
+      type: "object"
+      required:
+        - "id"
+        - "question"
+        - "created"
+      properties:
+        id:
+          description: "Faq ID"
+          type: "string"
+        question:
+          description: "The question of the Faq"
+          type: "string"
+        created:
+          description: "The flag to know if the faq has been created."
+          type: "boolean"
+    UpdatedFaq:
+      description: "Faq updated"
+      type: "object"
+      required:
+        - "id"
+        - "updated"
+      properties:
+        id:
+          description: "Faq ID"
+          type: "string"
+        updated:
+          description: "The flag to know if the faq has been updated."
+          type: "boolean"
+    DeletedFaq:
+      description: "Faq Attributes"
+      type: "object"
+      required:
+        - "id"
+        - "deleted"
+      properties:
+        id:
+          description: "Deleted Faq ID"
+          type: "string"
+        deleted:
+          description: "The flag to know if the faq has been deleted."
+          type: "boolean"
