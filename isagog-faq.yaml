@@ -32,8 +32,19 @@ paths:
       summary: "Update the threshold value"
       operationId: "updateThreshold"
       parameters:
-        - $ref: "#/components/parameters/CategoryId"
-        - $ref: "#/components/parameters/Threshold"
+        - name: "categoryId"
+          in: "path"
+          description: "the category ID"
+          required: true
+          schema:
+            type: "string"
+        - name: "threshold"
+          in: "query"
+          description: "the category threshold"
+          required: true
+          schema:
+            type: "number"
+            format: "double"
       responses:
         200:
           $ref: "#/components/responses/CategoryUpdated"
@@ -53,10 +64,31 @@ paths:
       summary: "Compare and search similar FAQs"
       operationId: "compare"
       parameters:
-        - $ref: "#/components/parameters/Question"
-        - $ref: "#/components/parameters/Confidence"
-        - $ref: "#/components/parameters/Category"
-        - $ref: "#/components/parameters/Source"
+        - name: "question"
+          in: "query"
+          description: "The question to search"
+          required: true
+          schema:
+            type: "string"
+        - name: "confidence"
+          in: "query"
+          description: "whether to fetch only the FAQs that pass the category threshold"
+          required: true
+          schema:
+            type: "boolean"
+            default: true
+        - name: "category"
+          in: "query"
+          description: "the category filter. To fetch only the FAQs of this category"
+          required: false
+          schema:
+            type: "string"
+        - name: "source"
+          in: "query"
+          description: "the source filter. To fetch only the FAQs of this source"
+          required: false
+          schema:
+            type: "string"
       responses:
         200:
           $ref: "#/components/responses/Faqs"
@@ -67,8 +99,21 @@ paths:
       summary: "Get the FAQs list"
       operationId: "faqs"
       parameters:
-        - $ref: "#/components/parameters/Size"
-        - $ref: "#/components/parameters/From"
+        - name: "size"
+          in: "query"
+          description: "the number of FAQs to return"
+          required: true
+          schema:
+            type: "integer"
+            minimum: 1
+            maximum: 50
+        - name: "from"
+          in: "query"
+          description: "the number of FAQs to skip before starting to collect the result set"
+          required: true
+          schema:
+            type: "integer"
+            minimum: 0
       responses:
         200:
           $ref: "#/components/responses/Faqs"
@@ -116,67 +161,6 @@ components:
       required: true
       schema:
         type: "string"
-    CategoryId:
-      name: "categoryId"
-      in: "path"
-      description: "the category ID"
-      required: true
-      schema:
-        type: "string"
-    Threshold:
-      name: "threshold"
-      in: "query"
-      description: "the category threshold"
-      required: true
-      schema:
-        type: "number"
-        format: "double"
-    Question:
-      name: "question"
-      in: "query"
-      description: "The question to search"
-      required: true
-      schema:
-        type: "string"
-    Confidence:
-      name: "confidence"
-      in: "query"
-      description: "whether to fetch only the FAQs that pass the category threshold"
-      required: true
-      schema:
-        type: "boolean"
-        default: true
-    Category:
-      name: "category"
-      in: "query"
-      description: "the category filter. To fetch only the FAQs of this category"
-      required: false
-      schema:
-        type: "string"
-    Source:
-      name: "source"
-      in: "query"
-      description: "the source filter. To fetch only the FAQs of this source"
-      required: false
-      schema:
-        type: "string"
-    Size:
-      name: "size"
-      in: "query"
-      description: "the number of FAQs to return"
-      required: true
-      schema:
-        type: "integer"
-        minimum: 1
-        maximum: 50
-    From:
-      name: "from"
-      in: "query"
-      description: "the number of FAQs to skip before starting to collect the result set"
-      required: true
-      schema:
-        type: "integer"
-        minimum: 0
   requestBodies:
     AddingFaqs:
       description: "the bodies of the adding FAQs"
