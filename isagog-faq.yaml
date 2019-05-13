@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: "This is the faq-system agent of the Isagog Faq System (DQA)."
+  description: "The FAQ system agent of the Isagog Faq System (DQA)"
   version: "1.0.0"
   title: "Isagog Faq System"
   contact:
@@ -14,59 +14,43 @@ servers:
         default: "/"
 tags:
   - name: "faq"
-    description: "Manage the faq system"
-
+    description: "Query the FAQ system"
 paths:
   /categories:
     get:
       tags:
         - "faq"
-      summary: "Returns the list of all categories"
+      summary: "Get the list of all the categories"
       operationId: "categories"
       responses:
-        '200':
-          description: "List of categories"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CategoriesList'
-
+        200:
+          $ref: "#/components/responses/Categories"
   /categories/{categoryId}:
     post:
       tags:
         - "faq"
-      summary: "Update threshold value"
+      summary: "Update the threshold value"
       operationId: "updateThreshold"
       parameters:
         - $ref: "#/components/parameters/CategoryId"
         - $ref: "#/components/parameters/Threshold"
       responses:
-        '200':
-          description: "Updated Category"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Category'
-
+        200:
+          $ref: "#/components/responses/CategoryUpdated"
   /sources:
     get:
       tags:
         - "faq"
-      summary: "Returns the list of all sources"
+      summary: "Get the list of all the sources"
       operationId: "sources"
       responses:
-        '200':
-          description: "List of sources"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SourcesList'
-
+        200:
+          $ref: "#/components/responses/Sources"
   /faqs/compare:
     get:
       tags:
         - "faq"
-      summary: "Compare and search the similar faqs"
+      summary: "Compare and search similar FAQs"
       operationId: "compare"
       parameters:
         - $ref: "#/components/parameters/Question"
@@ -74,80 +58,55 @@ paths:
         - $ref: "#/components/parameters/Category"
         - $ref: "#/components/parameters/Source"
       responses:
-        '200':
-          description: "List of similar faqs"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FaqsList'
-
+        200:
+          $ref: "#/components/responses/Faqs"
   /faqs/search:
     get:
       tags:
         - "faq"
-      summary: "Returns the faqs list"
+      summary: "Get the FAQs list"
       operationId: "faqs"
       parameters:
         - $ref: "#/components/parameters/Size"
         - $ref: "#/components/parameters/From"
       responses:
-        '200':
-          description: "List of faqs"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FaqsList'
-
+        200:
+          $ref: "#/components/responses/Faqs"
   /faqs/add:
     post:
       tags:
         - "faq"
-      summary: "Add faqs"
+      summary: "Add FAQs"
       operationId: "addFaqs"
       requestBody:
-        $ref: "#/components/requestBodies/AddFaqs"
+        $ref: "#/components/requestBodies/AddingFaqs"
       responses:
-        '200':
-          description: "List of added faqs"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AddedFaqsList'
-
+        200:
+          $ref: "#/components/responses/Add"
   /faqs/{faqId}:
     post:
       tags:
         - "faq"
-      summary: "Update faq"
+      summary: "Update a FAQ"
       operationId: "updateFaq"
       parameters:
         - $ref: "#/components/parameters/FaqId"
       requestBody:
         $ref: '#/components/requestBodies/UpdateFaq'
       responses:
-        '200':
-          description: "Updated Faq"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UpdatedFaq'
-
+        200:
+          $ref: "#/components/responses/Update"
   /faqs/{faqId}/delete:
     delete:
       tags:
         - "faq"
-      summary: "Delete faq"
+      summary: "Delete a FAQ"
       operationId: "deleteFaq"
       parameters:
         - $ref: "#/components/parameters/FaqId"
       responses:
-        '200':
-          description: "Deleted Faq id"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeletedFaq'
-
+        200:
+          $ref: "#/components/responses/Delete"
 components:
   parameters:
     FaqId:
@@ -182,7 +141,7 @@ components:
     Confidence:
       name: "confidence"
       in: "query"
-      description: "A boolean parameter to fetch only the faqs that pass the category threshold."
+      description: "whether to fetch only the FAQs that pass the category threshold"
       required: true
       schema:
         type: "boolean"
@@ -190,21 +149,21 @@ components:
     Category:
       name: "category"
       in: "query"
-      description: "The category filter. To fetch only the faqs of this category."
+      description: "the category filter. To fetch only the FAQs of this category"
       required: false
       schema:
         type: "string"
     Source:
       name: "source"
       in: "query"
-      description: "The source filter. To fetch only the faqs of this source."
+      description: "the source filter. To fetch only the FAQs of this source"
       required: false
       schema:
         type: "string"
     Size:
       name: "size"
       in: "query"
-      description: "The number of faqs to return."
+      description: "the number of FAQs to return"
       required: true
       schema:
         type: "integer"
@@ -213,34 +172,87 @@ components:
     From:
       name: "from"
       in: "query"
-      description: "The number of faqs to skip before starting to collect the result set."
+      description: "the number of FAQs to skip before starting to collect the result set"
       required: true
       schema:
         type: "integer"
         minimum: 0
   requestBodies:
-    AddFaqs:
-      description: "The body to add new faqs"
+    AddingFaqs:
+      description: "the bodies of the adding FAQs"
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AddFaqs'
+            description: "the list of FAQs to add"
+            type: "array"
+            items:
+              $ref: '#/components/schemas/FaqBody'
     UpdateFaq:
-      description: "The body to update faq"
+      description: "the partial body of a FAQ"
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/UpdateFaq'
+            $ref: '#/components/schemas/FaqPartialBody'
+  responses:
+    Categories:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            description: "the list of all the categories"
+            type: "array"
+            items:
+              $ref: "#/components/schemas/Category"
+    CategoryUpdated:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Category'
+    Sources:
+      description: "the list of all the sources"
+      content:
+        application/json:
+          schema:
+            description: "List of Sources"
+            type: "array"
+            items:
+              $ref: "#/components/schemas/Source"
+    Faqs:
+      description: "success"
+      content:
+        application/json:
+          schema:
+            description: "a list of Faqs"
+            type: "array"
+            items:
+              $ref: "#/components/schemas/Faq"
+    Add:
+      description: "request handled"
+      content:
+        application/json:
+          schema:
+            description: "the list of added FAQs"
+            type: "array"
+            items:
+              $ref: "#/components/schemas/AddResponse"
+    Update:
+      description: "request handled"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UpdateResponse"
+    Delete:
+      description: "request handled"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeleteResponse"
   schemas:
-    CategoriesList:
-      description: "List of Categories"
-      type: "array"
-      items:
-        $ref: "#/components/schemas/Category"
     Category:
-      description: "Category Attributes"
+      description: "a category"
       type: "object"
       required:
         - "id"
@@ -248,77 +260,45 @@ components:
         - "threshold"
       properties:
         id:
-          description: "Category ID"
+          description: "the category ID"
           type: "string"
         name:
-          description: "Category name"
+          description: "the category name"
           type: "string"
         threshold:
-          description: "Threshold score for the Category"
+          description: "the score threshold for the category"
           type: "number"
           format: "double"
-    SourcesList:
-      description: "List of Sources"
-      type: "array"
-      items:
-        $ref: "#/components/schemas/Source"
     Source:
-      description: "Source Attributes"
+      description: "a source of FAQs"
       type: "object"
       required:
         - "id"
         - "name"
       properties:
         id:
-          description: "Source ID"
+          description: "the source ID"
           type: "string"
         name:
-          description: "Source name"
+          description: "the source name"
           type: "string"
-    FaqsList:
-      description: "List of Faqs"
-      type: "array"
-      items:
-        $ref: "#/components/schemas/Faq"
     Faq:
-      description: "Faq Attributes"
-      type: "object"
-      required:
-        - "id"
-        - "score"
-        - "question"
-        - "answer"
-        - "source"
-        - "category"
-      properties:
-        id:
-          description: "Faq ID"
-          type: "string"
-        score:
-          description: "Faq Score"
-          type: "number"
-          format: "double"
-        question:
-          description: "The question of the Faq"
-          type: "string"
-        answer:
-          description: "The answer of the Faq"
-          type: "string"
-        source:
-          description: "The source of the Faq"
-          type: "string"
-        category:
-          description: "The category of the Faq"
-          type: "string"
-        varified_at:
-          description: "The verification date of the Faq"
-          type: "string"
-    AddFaqs:
-      description: "List of Faqs to add"
-      type: "array"
-      items:
-        $ref: '#/components/schemas/AddFaq'
-    AddFaq:
+      allOf:
+        - $ref: "#/components/schemas/FaqBody"
+        - description: "a FAQ"
+          type: "object"
+          required:
+            - "id"
+            - "score"
+          properties:
+            id:
+              description: "the FAQ ID"
+              type: "string"
+            score:
+              description: "the FAQ score"
+              type: "number"
+              format: "double"
+    FaqBody:
       type: "object"
       required:
         - "question"
@@ -335,10 +315,8 @@ components:
         source:
           type: "string"
         verified_at:
-          type: "string"
-          format: "date-time"
-          example: "2017-07-21T17:32:28Z"
-    UpdateFaq:
+          $ref: "#/components/schemas/DateStr"
+    FaqPartialBody:
       type: "object"
       properties:
         question:
@@ -350,16 +328,9 @@ components:
         source:
           type: "string"
         verified_at:
-          type: "string"
-          format: "date-time"
-          example: "2017-07-21T17:32:28Z"
-    AddedFaqsList:
-      description: "List of added Faqs"
-      type: "array"
-      items:
-        $ref: "#/components/schemas/AddedFaq"
-    AddedFaq:
-      description: "Faq added"
+          $ref: "#/components/schemas/DateStr"
+    AddResponse:
+      description: "the response to a FAQ creation request"
       type: "object"
       required:
         - "id"
@@ -367,37 +338,41 @@ components:
         - "created"
       properties:
         id:
-          description: "Faq ID"
+          description: "the FAQ ID"
           type: "string"
         question:
-          description: "The question of the Faq"
+          description: "the question of the FAQ"
           type: "string"
         created:
-          description: "The flag to know if the faq has been created."
+          description: "whether the FAQ has been created"
           type: "boolean"
-    UpdatedFaq:
-      description: "Faq updated"
+    UpdateResponse:
+      description: "the response to a FAQ update request"
       type: "object"
       required:
         - "id"
         - "updated"
       properties:
         id:
-          description: "Faq ID"
+          description: "the FAQ ID"
           type: "string"
         updated:
-          description: "The flag to know if the faq has been updated."
+          description: "whether the FAQ has been updated"
           type: "boolean"
-    DeletedFaq:
-      description: "Faq Attributes"
+    DeleteResponse:
+      description: "the response to a FAQ cancellation request"
       type: "object"
       required:
         - "id"
         - "deleted"
       properties:
         id:
-          description: "Deleted Faq ID"
+          description: "the FAQ ID"
           type: "string"
         deleted:
-          description: "The flag to know if the faq has been deleted."
+          description: "whether the FAQ has been deleted"
           type: "boolean"
+    DateStr:
+      type: "string"
+      format: "date-time"
+      example: "2017-07-21T17:32:28Z"
