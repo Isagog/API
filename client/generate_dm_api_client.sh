@@ -11,7 +11,7 @@ fi
 OUTPUT_DIR=$1
 VERSION=$2
 
-JAVA_POST_PROCESS_FILE="/usr/local/bin/clang-format -i"
+export JAVA_POST_PROCESS_FILE="/usr/local/bin/clang-format -i"
 
 openapi-generator generate \
  --skip-validate-spec \

@@ -14,7 +14,7 @@ VERSION=$2
 wget https://raw.githubusercontent.com/KotlinNLP/NLPServer/api-doc/openapi.yaml -O ../isagog-nlp.yaml
 sed -i 's/default: "3000"/default: "3100"/g' ../isagog-nlp.yaml
 
-JAVA_POST_PROCESS_FILE="/usr/local/bin/clang-format -i"
+export JAVA_POST_PROCESS_FILE="/usr/local/bin/clang-format -i"
 
 openapi-generator generate \
  -i ../isagog-nlp.yaml \
