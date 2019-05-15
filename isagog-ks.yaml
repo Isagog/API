@@ -345,13 +345,17 @@ paths:
           description: The Knowledge Graph identifier
       operationId: frameSentence
       responses:
-        200:
-          $ref: '#/components/schemas/FrameResponse'
-        400:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FrameResponse'
+        '400':
           description: "Unknown graph"
-        401:
+        '401':
           description: "Invalid sentence"
-        500:
+        '500':
           description: "Server error"
       tags:
         - KnowledgeService
