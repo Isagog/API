@@ -313,9 +313,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ConceptualMapping'
+                 $ref: '#/components/schemas/ConceptualMapping'
         '400':
           description: Unknown graph
         '401':
@@ -835,14 +833,25 @@ components:
     ConceptualMapping:
       type: object
       required:
-        - sentenceId
+        - elements
+      properties:
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConceptualMappingElement'
+        sentenceId:
+          type: integer
+          format: int32
+        report:
+          type: string
+
+    ConceptualMappingElement:
+      type: object
+      required:
         - concept
         - startIndex
         - endIndex
       properties:
-        sentenceId:
-           type: integer
-           format: int32
         concept:
             type: string
             format: uri
@@ -850,20 +859,10 @@ components:
             type: string
             enum:
               - Concept
-              - Property
+              - Relation
               - Attribute
               - Entity
-        pragType:
-          type: string
-          enum:
-            - Out
-            - OptMinus
-            - OptPlus
-            - OptAvg
-            - OutOptMinus
-            - OutOptPlus
-            - OutOptAvg
-            - Any
+
         startIndex:
             type: integer
             format: int32
