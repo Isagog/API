@@ -7,6 +7,9 @@ info:
     document collections for answers, and returns them back.
   contact:
     email: api@isagog.com
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 servers:
   - url: "http://localhost"
     variables:
