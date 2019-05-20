@@ -1,0 +1,1052 @@
+openapi: "3.0.2"
+info:
+  description: "This is an NLP services server of the Isagog Dialog Platform that analyzes a text using the library [KotlinNLP](https://github.com/KotlinNLP)."
+  version: "1.0.0"
+  title: "Isagog NLP Services"
+  contact:
+    email: "admin@isagog.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  - url: "http://localhost"
+    variables:
+      port:
+        default: "3100"
+      basePath:
+        default: "/"
+tags:
+  - name: "NLPService"
+    description: "Services for the analysis of texts written in natural language"
+    externalDocs:
+      description: "Find out more"
+      url: "https://github.com/KotlinNLP/NLPServer"
+paths:
+  /analyze:
+    post:
+      tags:
+        - "NLPService"
+      summary: "Get the complete analysis of a text"
+      operationId: "analyzeText"
+      parameters:
+        - name: "distribution"
+          in: "query"
+          description: "whether to return the score distributions of various analysis elements"
+          required: false
+          schema:
+            type: "boolean"
+            default: false
+        - name: "pretty"
+          in: "query"
+          description: "whether to indent the returned JSON string, for a major readability"
+          required: false
+          schema:
+            type: "boolean"
+            default: false
+      requestBody:
+        $ref: "#/components/requestBodies/InputText"
+      responses:
+        200:
+          description: "text successfully analyzed"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NLPAnalysis"
+        400:
+          description: "Invalid input"
+  /parse:
+    post:
+      tags:
+        - "NLPService"
+      summary: "Parse syntactically and morphologically a text"
+      operationId: "parseText"
+      parameters:
+        - name: "distribution"
+          in: "query"
+          description: "whether to return the score distributions of various analysis elements"
+          required: false
+          schema:
+            type: "boolean"
+            default: false
+        - name: "pretty"
+          in: "query"
+          description: "whether to indent the returned JSON string, for a major readability"
+          required: false
+          schema:
+            type: "boolean"
+            default: false
+      requestBody:
+        $ref: "#/components/requestBodies/InputText"
+      responses:
+        200:
+          description: "text successfully parsed"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LinguisticAnalysis"
+        400:
+          description: "Invalid input"
+  /extract-frames:
+    post:
+      tags:
+        - "NLPService"
+      summary: "Extract frames from a text, respect to all the available domains"
+      operationId: "extractFrames"
+      parameters:
+        - name: "lang"
+          in: "query"
+          description: "force the language analysis"
+          required: false
+          schema:
+            $ref: "#/components/schemas/LanguageISO"
+        - name: "distribution"
+          in: "query"
+          description: "whether to return the score distributions of various analysis elements"
+          required: false
+          schema:
+            type: "boolean"
+            default: false
+        - name: "pretty"
+          in: "query"
+          description: "whether to indent the returned JSON string, for a major readability"
+          required: false
+          schema:
+            type: "boolean"
+            default: false
+      requestBody:
+        $ref: "#/components/requestBodies/InputText"
+      responses:
+        200:
+          $ref: "#/components/responses/FramesExtraction"
+        400:
+          description: "Invalid input"
+  /extract-frames/{domainId}:
+    post:
+      tags:
+        - "NLPService"
+      summary: "Extract frames from a text, respect to a given domain"
+      operationId: "extractDomainFrames"
+      parameters:
+        - $ref: "#/components/parameters/DomainId"
+        - name: "lang"
+          in: "query"
+          description: "force the language analysis"
+          required: false
+          schema:
+            $ref: "#/components/schemas/LanguageISO"
+        - name: "distribution"
+          in: "query"
+          description: "whether to return the score distributions of various analysis elements"
+          required: false
+          schema:
+            type: "boolean"
+            default: false
+        - name: "pretty"
+          in: "query"
+          description: "whether to indent the returned JSON string, for a major readability"
+          required: false
+          schema:
+            type: "boolean"
+            default: false
+      requestBody:
+        $ref: "#/components/requestBodies/InputText"
+      responses:
+        200:
+          $ref: "#/components/responses/FramesExtraction"
+        400:
+          description: "Invalid input"
+components:
+  parameters:
+    DomainId:
+      name: "domainId"
+      in: "path"
+      description: "the ID of a domain"
+      required: true
+      schema:
+        type: "string"
+  requestBodies:
+    InputText:
+      description: "The input text"
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InputText"
+  responses:
+    FramesExtraction:
+      description: "frames extracted successfully"
+      content:
+        application/json:
+          schema:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/ExtractFramesResponse"
+  schemas:
+    InputText:
+      type: "object"
+      required:
+        - "text"
+      properties:
+        text:
+          type: "string"
+    ExtractFramesResponse:
+      type: "object"
+      required:
+        - "domain"
+        - "sentences"
+      properties:
+        domain:
+          type: "string"
+        sentences:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ExtractedFrame"
+    ExtractedFrame:
+      type: "object"
+      required:
+        - "intent"
+      properties:
+        intent:
+          $ref: "#/components/schemas/NLPIntent"
+        distribution:
+          type: "array"
+          items:
+            type: "object"
+            required:
+              - "intent"
+              - "score"
+            properties:
+              intent:
+                type: "string"
+                description: "The name of the intent"
+              score:
+                $ref: "#/components/schemas/Score"
+    NLPIntent:
+      type: "object"
+      required:
+        - "name"
+        - "slots"
+        - "score"
+      properties:
+        name:
+          type: "string"
+        slots:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/NLPSlot"
+        score:
+          $ref: "#/components/schemas/Score"
+    NLPSlot:
+      type: "object"
+      required:
+        - "name"
+        - "value"
+        - "tokens"
+      properties:
+        name:
+          type: "string"
+        value:
+          type: "string"
+        tokens:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/IndexedScore"
+    NLPAnalysis:
+      type: "object"
+      required:
+        - "linguisticAnalysis"
+        - "categories"
+        - "locations"
+        - "dateTimes"
+        - "entities"
+      properties:
+        linguisticAnalysis:
+          $ref: "#/components/schemas/LinguisticAnalysis"
+        categories:
+          type: "object"
+          properties:
+            iptc:
+              $ref: "#/components/schemas/Category"
+        locations:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Location"
+        dateTimes:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/DateTimeObj"
+        entities:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Entity"
+    LinguisticAnalysis:
+      type: "object"
+      description: "the linguistic analysis of the text, including syntactic, morphological and semantic information"
+      required:
+        - "sentences"
+        - "language"
+      properties:
+        sentences:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/LinguisticSentence"
+        language:
+          $ref: "#/components/schemas/Language"
+    LinguisticSentence:
+      allOf:
+        - $ref: "#/components/schemas/PositionalElement"
+        - type: "object"
+          description: "the linguistic analysis of a sentence, including syntactic, morphological and semantic information"
+          required:
+            - "id"
+            - "score"
+            - "tokens"
+          properties:
+            id:
+              type: "integer"
+              format: "int32"
+              example: 0
+            score:
+              $ref: "#/components/schemas/Score"
+            tokens:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/LinguisticToken"
+    LinguisticToken:
+      type: "object"
+      required:
+        - "id"
+        - "type"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+          example: 0
+        type:
+          type: "string"
+      discriminator:
+        propertyName: "type"
+        mapping:
+          WORD: "#/components/schemas/TokenWord"
+          TRACE: "#/components/schemas/TokenTrace"
+          WORD-TRACE: "#/components/schemas/TokenWordTrace"
+          WORD-COMPOSITE: "#/components/schemas/TokenComposite"
+    TokenBase:
+      type: "object"
+      required:
+        - "posBase"
+        - "dependency"
+        - "coReferences"
+        - "semanticRelations"
+        - "morphology"
+      properties:
+        posBase:
+          $ref: "#/components/schemas/POSBase"
+        dependency:
+          $ref: "#/components/schemas/Dependency"
+        coReferences:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/CoReference"
+        semanticRelations:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SemanticRelation"
+        morphology:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SingleMorphology"
+    FormToken:
+      type: "object"
+      required:
+        - "form"
+        - "translitForm"
+      properties:
+        form:
+          type: "string"
+        translitForm:
+          type: "string"
+    TokenTrace:
+      allOf:
+        - $ref: "#/components/schemas/LinguisticToken"
+        - $ref: "#/components/schemas/TokenBase"
+    TokenWordTrace:
+      allOf:
+        - $ref: "#/components/schemas/LinguisticToken"
+        - $ref: "#/components/schemas/TokenBase"
+        - $ref: "#/components/schemas/FormToken"
+    TokenWord:
+      allOf:
+        - $ref: "#/components/schemas/LinguisticToken"
+        - $ref: "#/components/schemas/TokenBase"
+        - $ref: "#/components/schemas/FormToken"
+        - $ref: "#/components/schemas/PositionalElement"
+    TokenComposite:
+      allOf:
+        - $ref: "#/components/schemas/LinguisticToken"
+        - $ref: "#/components/schemas/FormToken"
+        - $ref: "#/components/schemas/PositionalElement"
+        - type: "object"
+          required:
+            - "components"
+          properties:
+            components:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/TokenWord"
+    LanguageObject:
+      type: "object"
+      required:
+        - "id"
+        - "name"
+      properties:
+        id:
+          $ref: "#/components/schemas/LanguageISO"
+        name:
+          type: "string"
+          description: "the standard English name"
+          example: "English"
+    LanguageISO:
+      type: "string"
+      example: "en"
+      pattern: "^[a-z][a-z]$"
+      description: "the ISO 639-1 code of the language (2 chars)"
+    ScoredLanguage:
+      allOf:
+        - $ref: "#/components/schemas/LanguageObject"
+        - $ref: "#/components/schemas/ScoredElement"
+    Language:
+      allOf:
+        - $ref: "#/components/schemas/LanguageObject"
+        - type: "object"
+          description: "the language in which the text has been written"
+          properties:
+            distribution:
+              type: "array"
+              description: "the distribution of the score among the languages"
+              items:
+                $ref: "#/components/schemas/ScoredLanguage"
+    Category:
+      type: "object"
+      description: "a category that indicates the content of the text"
+      required:
+        - "id"
+        - "score"
+        - "sentences"
+        - "sublevel"
+      properties:
+        id:
+          type: "string"
+          example: "01000000"
+        score:
+          $ref: "#/components/schemas/Score"
+        sentences:
+          type: "array"
+          items:
+            type: "object"
+            required:
+              - "id"
+              - "score"
+              - "tokens"
+            properties:
+              id:
+                type: "integer"
+                format: "int32"
+                example: 0
+              score:
+                $ref: "#/components/schemas/Score"
+              tokens:
+                type: "array"
+                items:
+                  type: "object"
+                  required:
+                    - "id"
+                    - "score"
+                  properties:
+                    id:
+                      type: "integer"
+                      format: "int32"
+                      example: 2
+                    score:
+                      $ref: "#/components/schemas/Score"
+        sublevel:
+          $ref: "#/components/schemas/SubCategory"
+    SubCategory:
+      allOf:
+        - $ref: "#/components/schemas/Category"
+        - type: "object"
+          description: "a nested category that can be null"
+          nullable: true
+          example: null
+    Location:
+      type: "object"
+      description: "a location recognized in the text"
+      required:
+        - "id"
+        - "type"
+        - "name"
+        - "nameTranslations"
+        - "sentences"
+      properties:
+        id:
+          type: "string"
+          example: "250A01D310045"
+        type:
+          type: "string"
+          example: "City"
+          enum:
+            - "City"
+            - "AdminArea"
+            - "Country"
+            - "Continent"
+            - "Region"
+        name:
+          type: "string"
+          example: "London"
+        nameTranslations:
+          type: "object"
+          properties:
+            ar:
+              type: "string"
+              example: "لندن"
+            de:
+              type: "string"
+              example: "London"
+            en:
+              type: "string"
+              example: "London"
+            es:
+              type: "string"
+              example: "Londres"
+            fr:
+              type: "string"
+              example: "Londres"
+            it:
+              type: "string"
+              example: "Londra"
+        sentences:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Sentence"
+    DateTimeObj:
+      type: "object"
+      description: "a date-time expression"
+      required:
+        - "type"
+        - "sentences"
+      properties:
+        type:
+          type: "string"
+        sentences:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Sentence"
+      discriminator:
+        propertyName: "type"
+        mapping:
+          dateTime: "#/components/schemas/DateTimeSimple"
+          offset: "#/components/schemas/Offset"
+          interval: "#/components/schemas/Interval"
+    DateTimeSimple:
+      allOf:
+        - $ref: "#/components/schemas/DateTimeObj"
+        - type: "object"
+          description: "a specific date-time expression"
+          required:
+            - "isoFormat"
+          properties:
+            isoFormat:
+              type: "string"
+              description: "the date-time formatted in 'TZ' ISO format"
+              format: "date-time"
+              example: "2018-01-13T09:15:00Z"
+    Offset:
+      allOf:
+        - $ref: "#/components/schemas/DateTimeObj"
+        - type: "object"
+          description: "an offset of date or time"
+          required:
+            - "isoFormat"
+            - "seconds"
+          properties:
+            isoFormat:
+              type: "string"
+              description: "the date-time formatted in 'TZ' ISO format"
+              format: "date-time"
+              example: "2018-01-13T09:15:00Z"
+            seconds:
+              type: "integer"
+              format: "int64"
+    Interval:
+      allOf:
+        - $ref: "#/components/schemas/DateTimeObj"
+        - type: "object"
+          description: "an interval of date-times (can be open)"
+          properties:
+            from:
+              type: "string"
+              description: "the lower bound of the interval (not present if it is open)"
+              format: "date-time"
+              example: "2018-01-13T09:15:00Z"
+            to:
+              type: "string"
+              description: "the upper bound of the interval (not present if it is open)"
+              format: "date-time"
+              example: "2018-01-13T09:15:00Z"
+    Entity:
+      type: "object"
+      description: "an entity recognized in the text"
+      required:
+        - "name"
+        - "type"
+        - "score"
+        - "sentences"
+      properties:
+        name:
+          type: "string"
+          example: "Albert Einstein"
+        type:
+          type: "string"
+          example: "PER"
+          enum:
+            - "PER"
+            - "ORG"
+        score:
+          type: "number"
+          format: "double"
+          example: 0.78
+        sentences:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ScoredSentence"
+    Sentence:
+      type: "object"
+      description: "a sentence with ranges of tokens that represent specific information"
+      required:
+        - "id"
+        - "tokens"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+          description: "the sentence id"
+        tokens:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TokensRange"
+    ScoredSentence:
+      type: "object"
+      description: "a sentence with ranges of tokens that represent specific information, with the related system score"
+      required:
+        - "id"
+        - "tokens"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+          description: "the sentence id"
+        tokens:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ScoredTokensRange"
+    TokensRange:
+      type: "object"
+      description: "a range of tokens that represent an information extracted from the text"
+      required:
+        - "startIndex"
+        - "endIndex"
+      properties:
+        startIndex:
+          type: "integer"
+          format: "int32"
+          description: "the index of the first token of the range (within the 'tokens' list of the sentence)"
+          example: 2
+        endIndex:
+          type: "integer"
+          format: "int32"
+          description: "the index of the last token of the range (within the 'tokens' list of the sentence)"
+          example: 4
+    ScoredTokensRange:
+      allOf:
+        - $ref: "#/components/schemas/TokensRange"
+        - $ref: "#/components/schemas/ScoredElement"
+    Score:
+      type: "number"
+      format: "double"
+      description: "the confidence of the system for this element"
+      example: 0.89
+    ScoredElement:
+      type: "object"
+      required:
+        - "score"
+      properties:
+        score:
+          $ref: "#/components/schemas/Score"
+    IndexedScore:
+      allOf:
+        - $ref: "#/components/schemas/ScoredElement"
+        - type: "object"
+          required:
+            - "index"
+          properties:
+            index:
+              type: "integer"
+              format: "int32"
+              example: 0
+    Position:
+      type: "object"
+      description: "the position in the text"
+      required:
+        - "index"
+        - "start"
+        - "end"
+      properties:
+        index:
+          type: "integer"
+          format: "int32"
+          example: 0
+        start:
+          type: "integer"
+          format: "int32"
+          example: 0
+        end:
+          type: "integer"
+          format: "int32"
+          example: 8
+    PositionalElement:
+      type: "object"
+      required:
+        - "position"
+      properties:
+        position:
+          $ref: "#/components/schemas/Position"
+    SingleMorphology:
+      oneOf:
+        - $ref: "#/components/schemas/BaseMorphology"
+        - $ref: "#/components/schemas/NumberMorphology"
+    BaseMorphology:
+      type: "object"
+      required:
+        - "oov"
+        - "lemma"
+        - "pos"
+        - "score"
+      properties:
+        oov:
+          type: "boolean"
+          description: "whether this morphology is Out Of Vocabulary because it has been generated respect to the context"
+        lemma:
+          type: "string"
+        pos:
+          $ref: "#/components/schemas/POS"
+        score:
+          $ref: "#/components/schemas/Score"
+    NumberMorphology:
+      allOf:
+        - $ref: "#/components/schemas/BaseMorphology"
+        - type: "object"
+          required:
+            - "numericForm"
+          properties:
+            numericForm:
+              type: "number"
+              description: "the number expressed in digits"
+              example: 123.5
+    CoReference:
+      type: "object"
+      required:
+        - "sentenceId"
+        - "tokenId"
+        - "score"
+      properties:
+        sentenceId:
+          type: "integer"
+          format: "int32"
+          example: 1
+        tokenId:
+          type: "integer"
+          format: "int32"
+          example: 5
+        score:
+          $ref: "#/components/schemas/Score"
+    Dependency:
+      type: "object"
+      required:
+        - "head"
+        - "relation"
+        - "attachmentScore"
+        - "relationScore"
+      properties:
+        head:
+          type: "integer"
+          format: "int32"
+          example: -1
+        relation:
+          $ref: "#/components/schemas/SyntacticRelation"
+        attachmentScore:
+          $ref: "#/components/schemas/Score"
+        relationScore:
+          $ref: "#/components/schemas/Score"
+    POSBase:
+      type: "string"
+      enum:
+        - "ADJ"
+        - "ADV"
+        - "ART"
+        - "CONJ"
+        - "NOUN"
+        - "PRON"
+        - "PREP"
+        - "POSTPOS"
+        - "INTERJ"
+        - "PHRASE"
+        - "PUNCT"
+        - "VERB"
+        - "DATE"
+        - "HOUR"
+        - "NUM"
+        - "PREDET"
+        - "UNKNOWN"
+    POS:
+      type: "string"
+      enum:
+        - "ADJ"
+        - "ADJ-COMPAR"
+        - "ADJ-DEITT"
+        - "ADJ-DEMONS"
+        - "ADJ-DEMONS-ANTEC"
+        - "ADJ-DEMONS-SUCC"
+        - "ADJ-EXCLAM"
+        - "ADJ-INDEF"
+        - "ADJ-INDEF-SUBORD"
+        - "ADJ-INDEF-DISTR"
+        - "ADJ-INDEF-QUANT"
+        - "ADJ-INTERR"
+        - "ADJ-POSS"
+        - "ADJ-ORDIN"
+        - "ADJ-QUALIF"
+        - "ADJ-QUALIF-POST"
+        - "ADJ-RELAT"
+        - "ADV"
+        - "ADV-ADVERS"
+        - "ADV-COMPAR"
+        - "ADV-CONCESS"
+        - "ADV-DEITT"
+        - "ADV-INDEF"
+        - "ADV-INDEF-SUBORD"
+        - "ADV-INTERR"
+        - "ADV-LIMIT"
+        - "ADV-LOC"
+        - "ADV-NEG"
+        - "ADV-PHRAS"
+        - "ADV-QUANT"
+        - "ADV-STRENG"
+        - "ADV-STRENG-NEG"
+        - "ADV-TIME"
+        - "ART"
+        - "ART-DEF"
+        - "ART-INDEF"
+        - "ART-INDEF-PART"
+        - "CONJ"
+        - "CONJ-COMPAR"
+        - "CONJ-COMPAR-ANTEC"
+        - "CONJ-COMPAR-SUCC"
+        - "CONJ-CONCESS"
+        - "CONJ-COORD"
+        - "CONJ-COORD-ADVERS"
+        - "CONJ-COORD-DISJ"
+        - "CONJ-COORD-EXPLIC"
+        - "CONJ-COORD-NEG"
+        - "CONJ-CORREL"
+        - "CONJ-CORREL-ANTEC"
+        - "CONJ-CORREL-SUCC"
+        - "CONJ-SUBORD"
+        - "CONJ-SUBORD-ADVERS"
+        - "CONJ-SUBORD-INTERR"
+        - "NOUN"
+        - "NOUN-COMMON"
+        - "NOUN-COMMON-GERUND"
+        - "NOUN-COMMON-QUANT"
+        - "NOUN-PROPER"
+        - "NOUN-PROPER-LOC"
+        - "NOUN-PROPER-ORG"
+        - "NOUN-PROPER-PER"
+        - "PRON"
+        - "PRON-DEMONS"
+        - "PRON-EXCLAM"
+        - "PRON-INDEF"
+        - "PRON-INDEF-DISTR"
+        - "PRON-INDEF-QUANT"
+        - "PRON-INDEF-SUBORD"
+        - "PRON-INTERR"
+        - "PRON-ORDIN"
+        - "PRON-PERS"
+        - "PRON-PERS-ENCLIT"
+        - "PRON-PERS-PROCLIT"
+        - "PRON-PERS-PROCLIT-REFL"
+        - "PRON-PERS-PROCLIT-VARIANT"
+        - "PRON-PERS-REFL"
+        - "PRON-PERS-VARIANT"
+        - "PRON-POSS"
+        - "PRON-RELAT"
+        - "PRON-RELAT-DOUBLE"
+        - "PREP"
+        - "PREP-ART"
+        - "PREP-POSS"
+        - "PREP-COMPAR"
+        - "PREDET"
+        - "POSTPOS"
+        - "POSTPOS-POSS"
+        - "PHRASE"
+        - "PHRASE-EXCLAM"
+        - "PHRASE-INTERR"
+        - "PHRASE-NEG"
+        - "VERB"
+        - "VERB-MODAL"
+        - "VERB-AUX"
+        - "INTERJ"
+        - "PUNCT"
+        - "DATE"
+        - "HOUR"
+        - "NUM"
+        - "UNKNOWN"
+    SyntacticRelation:
+      type: "string"
+      enum:
+        - "TOP"
+        - "INITIATOR"
+        - "SUBJ"
+        - "SUBJ-INTERR"
+        - "SUBJ-PASS"
+        - "OBJ"
+        - "OBJ-INTERR"
+        - "IOBJ"
+        - "IOBJ-INTERR"
+        - "INDCOMPL"
+        - "PREDCOMPL"
+        - "PREDCOMPL-SUBJ"
+        - "PREDCOMPL-OBJ"
+        - "PREDCOMPL-SUBJ-INTERR"
+        - "PREDCOMPL-OBJ-INTERR"
+        - "PREDCOMPL-INTERR"
+        - "RMOD"
+        - "RMOD-EXCLAM"
+        - "RMOD-INTERR"
+        - "RMOD-NEG"
+        - "RMOD-POSS"
+        - "RMOD-COMPAR"
+        - "RMOD-QUANT"
+        - "RMOD2ND"
+        - "RMOD2ND-NEG"
+        - "EXTRAOBJ"
+        - "EXTRASUBJ"
+        - "EMPTYCOMPL"
+        - "LOC"
+        - "PART"
+        - "VOC"
+        - "DET"
+        - "APPOSITION"
+        - "RELCL"
+        - "RELCL-REDUC"
+        - "AUX"
+        - "AUX-TENSE"
+        - "AUX-PASSIVE"
+        - "AUX-PROGRESSIVE"
+        - "COORD"
+        - "COORD-ANTEC"
+        - "COORD-NEG"
+        - "COORD2ND"
+        - "COORD2ND-NEG"
+        - "COORD2ND-ADVERS"
+        - "COORD2ND-COMPAR"
+        - "COORD2ND-CORRELAT"
+        - "COORD2ND-EXPLIC"
+        - "COORD2ND-SYMMETRIC"
+        - "SEPARATOR"
+        - "SEPARATOR-OPEN"
+        - "SEPARATOR-CLOSE"
+        - "QUOTES"
+        - "QUOTES-OPEN"
+        - "QUOTES-CLOSE"
+        - "CONN"
+        - "CONTIN"
+        - "CONTIN-DENOM"
+        - "CONTIN-LOCUT"
+        - "CONTIN-NUM"
+        - "CONTIN-COORD"
+        - "END"
+        - "END-INTERROGATIVE"
+        - "END-ASSERTIVE"
+        - "END-IMPERATIVE"
+        - "INTERJ"
+        - "_"
+        - "UNKNOWN"
+        - "WRONG"
+    SemanticRelation:
+      type: "string"
+      enum:
+        - "SPACETIME"
+        - "SPACETIME-INTERVAL"
+        - "SPACETIME-START"
+        - "SPACETIME-END"
+        - "TEMP"
+        - "TEMP-START"
+        - "TEMP-END"
+        - "TEMP-PREV"
+        - "TEMP-POST"
+        - "TEMP-PROXIM"
+        - "LOC"
+        - "LOC-IN"
+        - "LOC-DEST"
+        - "LOC-DIST"
+        - "LOC-UP"
+        - "LOC-DOWN"
+        - "LOC-AROUND"
+        - "LOC-SOURCE"
+        - "LOC-PROXIM"
+        - "LOC-CONTACT"
+        - "LOC-SIDE"
+        - "LOC-SIDE-RIGHT"
+        - "LOC-SIDE-LEFT"
+        - "MOV"
+        - "MOV-IN"
+        - "MOV-FROM"
+        - "MOV-TO"
+        - "MOV-TROUGH"
+        - "COMPAR"
+        - "COMPAR-LIMIT"
+        - "COMPAR-ACC"
+        - "COMPAR-EQUAL"
+        - "COMPAR-EQUAL-NEG"
+        - "MANNER"
+        - "MANNER-EQUAL"
+        - "MANNER-UNEQUAL"
+        - "MODAL"
+        - "COND"
+        - "CONC"
+        - "CAUS"
+        - "REASON"
+        - "REASONCAUSE"
+        - "ADVERS"
+        - "LIMIT"
+        - "GOAL"
+        - "EXCEPT"
+        - "EXPLIC"
+        - "THEME"
+        - "PROGRESS"
+        - "UNION"
+        - "DISUNION"
+        - "CONCERNS"
+        - "PARTITIVE"
+        - "SPEC"
+        - "SPEC-DENOM"
+        - "COMPANIONSHIP"
+        - "COMPANIONSHIP-FIG"
+        - "BENEFICIARY"
+        - "BENEFICIARY-DIS"
+        - "MEANS"
+        - "INSTRUMENT"
+        - "MATERIAL"
+        - "FAULT"
+        - "PENALTY"
+        - "REPLACEMENT"

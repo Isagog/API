@@ -10,6 +10,3 @@ __pycache__/
 
 # Auto-generated build folder
 client/build/
-
-# NLP YAML (it is auto-generated)
-isagog-nlp.yaml
