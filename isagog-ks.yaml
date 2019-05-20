@@ -7,10 +7,9 @@ servers:
       basePath:
         default: "/"
 info:
-  description: Isagog Knowledge Service.
-  version: 1.1.7
-  title: Isagog Knowledge
-  termsOfService: 'http://isagog.com/terms/'
+  title: Isagog Knowledge Service
+  version: 1.0.0
+  description: Reasoning services of the Isagog pltatform.
   contact:
     email: api@isagog.com
   license:

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Documental Question Answering
+  title: Isagog Documental Question Answering
   version: 1.0.0
   description: >-
     Documental Question Answering Server. Receives questions, searches
