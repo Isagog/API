@@ -127,7 +127,7 @@ paths:
         $ref: "#/components/requestBodies/AddingFaqs"
       responses:
         200:
-          $ref: "#/components/responses/Add"
+          $ref: "#/components/responses/AddFaqs"
   /faqs/{faqId}:
     post:
       tags:
@@ -140,7 +140,7 @@ paths:
         $ref: '#/components/requestBodies/UpdateFaq'
       responses:
         200:
-          $ref: "#/components/responses/Update"
+          $ref: "#/components/responses/UpdateFaq"
   /faqs/{faqId}/delete:
     delete:
       tags:
@@ -151,7 +151,7 @@ paths:
         - $ref: "#/components/parameters/FaqId"
       responses:
         200:
-          $ref: "#/components/responses/Delete"
+          $ref: "#/components/responses/DeleteFaq"
 components:
   parameters:
     FaqId:
@@ -213,7 +213,7 @@ components:
             type: "array"
             items:
               $ref: "#/components/schemas/Faq"
-    Add:
+    AddFaqs:
       description: "request handled"
       content:
         application/json:
@@ -221,19 +221,19 @@ components:
             description: "the list of added FAQs"
             type: "array"
             items:
-              $ref: "#/components/schemas/AddResponse"
-    Update:
+              $ref: "#/components/schemas/AddFaqResponse"
+    UpdateFaq:
       description: "request handled"
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/UpdateResponse"
-    Delete:
+            $ref: "#/components/schemas/UpdateFaqResponse"
+    DeleteFaq:
       description: "request handled"
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/DeleteResponse"
+            $ref: "#/components/schemas/DeleteFaqResponse"
   schemas:
     Category:
       description: "a category"
@@ -313,7 +313,7 @@ components:
           type: "string"
         verified_at:
           $ref: "#/components/schemas/DateStr"
-    AddResponse:
+    AddFaqResponse:
       description: "the response to a FAQ creation request"
       type: "object"
       required:
@@ -330,7 +330,7 @@ components:
         created:
           description: "whether the FAQ has been created"
           type: "boolean"
-    UpdateResponse:
+    UpdateFaqResponse:
       description: "the response to a FAQ update request"
       type: "object"
       required:
@@ -343,7 +343,7 @@ components:
         updated:
           description: "whether the FAQ has been updated"
           type: "boolean"
-    DeleteResponse:
+    DeleteFaqResponse:
       description: "the response to a FAQ cancellation request"
       type: "object"
       required:
