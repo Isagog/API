@@ -1,11 +1,4 @@
 openapi: 3.0.2
-servers:
-  - url: "http://localhost"
-    variables:
-      port:
-        default: "3200"
-      basePath:
-        default: "/"
 info:
   title: Isagog Knowledge Service
   version: 1.0.0
@@ -15,6 +8,13 @@ info:
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - url: "http://localhost"
+    variables:
+      port:
+        default: "3200"
+      basePath:
+        default: "/"
 tags:
   - name: KnowledgeGraph
     description: 'A Knowledge Graph (a,.k.a. Knowledge Base)'
