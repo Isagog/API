@@ -502,9 +502,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/KnowledgeItem'
+                  $ref: '#/components/schemas/KnowledgeSearchResult'
         '201':
           description: no results
         '400':
@@ -619,6 +617,17 @@ components:
             wrapped: true
           items:
             $ref: '#/components/schemas/KnowledgeItem'
+    KnowledgeSearchResult:
+      required:
+        - items
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/KnowledgeItem'
+        report:
+          type: string
     ClassificationResponse:
       required:
         - result
