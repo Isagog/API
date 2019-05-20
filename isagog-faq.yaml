@@ -1,10 +1,10 @@
 openapi: 3.0.0
 info:
-  description: "The FAQ system agent of the Isagog Faq System (DQA)"
-  version: "1.0.0"
   title: "Isagog Faq System"
+  version: "1.0.0"
+  description: "The FAQ system agent of the Isagog Faq System (DQA)"
   contact:
-    email: "admin@isagog.com"
+    email: "api@isagog.com"
 servers:
   - url: "http://localhost"
     variables:
