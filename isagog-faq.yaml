@@ -257,12 +257,8 @@ components:
       description: "a source of FAQs"
       type: "object"
       required:
-        - "id"
         - "name"
       properties:
-        id:
-          description: "the source ID"
-          type: "string"
         name:
           description: "the source name"
           type: "string"
