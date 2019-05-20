@@ -53,10 +53,21 @@ paths:
       tags:
         - "faq"
       summary: "Get the list of all the sources"
-      operationId: "sources"
+      operationId: "getSources"
       responses:
         200:
           $ref: "#/components/responses/Sources"
+  /sources/add:
+    put:
+      tags:
+        - "faq"
+      summary: "Add a new source"
+      operationId: "addSource"
+      requestBody:
+        $ref: "#/components/requestBodies/Source"
+      responses:
+        200:
+          description: "source added successfully"
   /faqs/compare:
     get:
       tags:
@@ -179,6 +190,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/FaqPartialBody'
+    Source:
+      description: "the body of a source"
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Source'
   responses:
     Categories:
       description: "Success"
