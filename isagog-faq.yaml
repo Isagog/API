@@ -87,10 +87,10 @@ paths:
         - name: "confidence"
           in: "query"
           description: "whether to fetch only the FAQs that pass the category threshold"
-          required: true
+          required: false
           schema:
             type: "boolean"
-            default: true
+            default: false
         - name: "category"
           in: "query"
           description: "the category filter. To fetch only the FAQs of this category"
