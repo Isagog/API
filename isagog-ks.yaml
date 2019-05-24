@@ -325,7 +325,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'isagog-nlp.yaml#/components/schemas/NLPAnalysis'
+              $ref: 'isagog-nlp.yaml#/components/schemas/LinguisticAnalysis'
         description: The sentence to be analyzed
         required: true
   '/graph/{kg}/frame':
