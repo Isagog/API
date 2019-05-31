@@ -1,195 +1,195 @@
-openapi: "3.0.2"
+openapi: 3.0.2
 info:
-  title: "Isagog Dialog Manager"
-  version: "1.0.0"
-  description: "This is the dialog agent of the Isagog Dialog Platform."
+  title: Isagog Dialog Manager
+  version: 1.0.0
+  description: This is the dialog agent of the Isagog Dialog Platform.
   contact:
-    email: "api@isagog.com"
+    email: api@isagog.com
   license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-  - url: "http://localhost"
+  - url: http://localhost
     variables:
       port:
-        default: "3000"
+        default: '3000'
       basePath:
-        default: "/"
+        default: /
 tags:
-  - name: "session"
-    description: "Manage the dialog sessions"
-  - name: "dialog"
-    description: "Manage a specific dialog"
+  - name: session
+    description: Manage the dialog sessions
+  - name: dialog
+    description: Manage a specific dialog
 paths:
   /session:
     post:
       tags:
-        - "session"
-      summary: "Create a new session"
-      operationId: "newSession"
+        - session
+      summary: Create a new session
+      operationId: newSession
       responses:
         200:
-          $ref: "#/components/responses/SessionId"
+          $ref: '#/components/responses/SessionId'
   /session/{sessionId}:
     delete:
       tags:
-        - "session"
-      summary: "Close a specific session"
-      operationId: "closeSession"
+        - session
+      summary: Close a specific session
+      operationId: closeSession
       parameters:
-        - $ref: "#/components/parameters/SessionId"
+        - $ref: '#/components/parameters/SessionId'
       requestBody:
-        $ref: "#/components/requestBodies/UserFeedback"
+        $ref: '#/components/requestBodies/UserFeedback'
       responses:
         200:
-          $ref: "#/components/responses/Confirmation"
+          $ref: '#/components/responses/Confirmation'
   /dialog/{sessionId}/init:
     post:
       tags:
-        - "dialog"
-      summary: "Request to initialize the dialog"
-      operationId: "initialize"
+        - dialog
+      summary: Request to initialize the dialog
+      operationId: initialize
       parameters:
-        - $ref: "#/components/parameters/SessionId"
+        - $ref: '#/components/parameters/SessionId'
       responses:
         200:
-          $ref: "#/components/responses/RequestId"
+          $ref: '#/components/responses/RequestId'
   /dialog/{sessionId}/input/text:
     post:
       tags:
-        - "dialog"
-      summary: "Send a textual input of the user"
-      operationId: "sendText"
+        - dialog
+      summary: Send a textual input of the user
+      operationId: sendText
       parameters:
-        - $ref: "#/components/parameters/SessionId"
+        - $ref: '#/components/parameters/SessionId'
       requestBody:
-        $ref: "#/components/requestBodies/InputText"
+        $ref: '#/components/requestBodies/InputText'
       responses:
         200:
-          $ref: "#/components/responses/RequestId"
+          $ref: '#/components/responses/RequestId'
   /dialog/{sessionId}/input/form:
     post:
       tags:
-        - "dialog"
-      summary: "Send a form filled by the user"
-      operationId: "sendForm"
+        - dialog
+      summary: Send a form filled by the user
+      operationId: sendForm
       parameters:
-        - $ref: "#/components/parameters/SessionId"
+        - $ref: '#/components/parameters/SessionId'
       requestBody:
-        $ref: "#/components/requestBodies/FilledForm"
+        $ref: '#/components/requestBodies/FilledForm'
       responses:
         200:
-          $ref: "#/components/responses/RequestId"
+          $ref: '#/components/responses/RequestId'
   /dialog/{sessionId}/input/selection:
     post:
       tags:
-        - "dialog"
-      summary: "Send the selection made by the user among more options"
-      operationId: "sendSelection"
+        - dialog
+      summary: Send the selection made by the user among more options
+      operationId: sendSelection
       parameters:
-        - $ref: "#/components/parameters/SessionId"
+        - $ref: '#/components/parameters/SessionId'
       requestBody:
-        $ref: "#/components/requestBodies/Selection"
+        $ref: '#/components/requestBodies/Selection'
       responses:
         200:
-          $ref: "#/components/responses/RequestId"
+          $ref: '#/components/responses/RequestId'
   /dialog/{sessionId}/response/{requestId}:
     get:
       tags:
-        - "dialog"
-      summary: "Get the response to a given request of a specific session"
-      operationId: "getResponse"
+        - dialog
+      summary: Get the response to a given request of a specific session
+      operationId: getResponse
       parameters:
-        - $ref: "#/components/parameters/SessionId"
-        - $ref: "#/components/parameters/RequestId"
+        - $ref: '#/components/parameters/SessionId'
+        - $ref: '#/components/parameters/RequestId'
       responses:
         200:
-          $ref: "#/components/responses/Response"
+          $ref: '#/components/responses/Response'
 components:
   requestBodies:
     InputText:
-      description: "The input text"
+      description: The input text
       required: true
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/InputText"
+            $ref: '#/components/schemas/InputText'
     FilledForm:
-      description: "A filled form"
+      description: A filled form
       required: true
       content:
         application/json:
           schema:
-            type: "array"
-            description: "the list of filled elements"
+            type: array
+            description: the list of filled elements
             items:
-              $ref: "#/components/schemas/FormElement"
+              $ref: '#/components/schemas/FormElement'
     Selection:
-      description: "A selection made among more options"
+      description: A selection made among more options
       required: true
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/InputSelection"
+            $ref: '#/components/schemas/InputSelection'
     UserFeedback:
-      description: "The feedback of the user for the current dialog session"
+      description: The feedback of the user for the current dialog session
       required: false
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/UserFeedback"
+            $ref: '#/components/schemas/UserFeedback'
   parameters:
     SessionId:
-      name: "sessionId"
-      in: "path"
-      description: "the ID of an active session"
+      name: sessionId
+      in: path
+      description: the ID of an active session
       required: true
-      example: "BqZci3YbHA"
+      example: BqZci3YbHA
       schema:
-        $ref: "#/components/schemas/AlphaNumId"
+        $ref: '#/components/schemas/AlphaNumId'
     RequestId:
-      name: "requestId"
-      in: "path"
-      description: "the ID of a request made"
+      name: requestId
+      in: path
+      description: the ID of a request made
       required: true
-      example: "rwgrBqOSSF"
+      example: rwgrBqOSSF
       schema:
-        $ref: "#/components/schemas/AlphaNumId"
+        $ref: '#/components/schemas/AlphaNumId'
   responses:
     Confirmation:
-      description: "Confirmation"
+      description: Confirmation
       content:
         application/json:
           schema:
-            type: "boolean"
+            type: boolean
             default: true
     RequestId:
-      description: "A new request ID"
+      description: A new request ID
       content:
         text/plain:
           schema:
-            $ref: "#/components/schemas/AlphaNumId"
+            $ref: '#/components/schemas/AlphaNumId'
     SessionId:
-      description: "A new session ID"
+      description: A new session ID
       content:
         text/plain:
           schema:
-            $ref: "#/components/schemas/AlphaNumId"
+            $ref: '#/components/schemas/AlphaNumId'
     Response:
-      description: "The response to a request of the client"
+      description: The response to a request of the client
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Response"
+            $ref: '#/components/schemas/Response'
   schemas:
     UserFeedback:
-      type: "object"
+      type: object
       required:
-        - "rating"
+        - rating
       properties:
         rating:
-          type: "integer"
-          format: "int32"
+          type: integer
+          format: int32
           enum:
             - 1
             - 2
@@ -202,129 +202,129 @@ components:
             - 9
             - 10
     AlphaNumId:
-      type: "string"
+      type: string
       minLength: 10
       maxLength: 10
-      pattern: "^[a-zA-Z0-9]+$"
-      example: "BqZci3YbHA"
+      pattern: '^[a-zA-Z0-9]+$'
+      example: BqZci3YbHA
     InputText:
-      type: "object"
+      type: object
       required:
-        - "text"
+        - text
       properties:
         text:
-          type: "string"
-          example: "Here it is the input of the user"
+          type: string
+          example: Here it is the input of the user
     InputSelection:
-      type: "object"
+      type: object
       required:
-        - "id"
+        - id
       properties:
         id:
-          type: "string"
-          description: "the ID of the option selected by the user"
+          type: string
+          description: the ID of the option selected by the user
     Response:
-      type: "object"
+      type: object
       required:
-        - "type"
+        - type
       properties:
         type:
-          type: "string"
+          type: string
       discriminator:
-        propertyName: "type"
+        propertyName: type
         mapping:
-          ANSWER: "#/components/schemas/Answer"
-          OPEN_REQUEST: "#/components/schemas/OpenRequest"
-          SELECTION: "#/components/schemas/SelectionRequest"
-          FORM: "#/components/schemas/FormRequest"
-          WAIT: "#/components/schemas/WaitRequest"
+          ANSWER: '#/components/schemas/Answer'
+          OPEN_REQUEST: '#/components/schemas/OpenRequest'
+          SELECTION: '#/components/schemas/SelectionRequest'
+          FORM: '#/components/schemas/FormRequest'
+          WAIT: '#/components/schemas/WaitRequest'
     Answer:
       allOf:
-        - $ref: "#/components/schemas/Response"
-        - type: "object"
+        - $ref: '#/components/schemas/Response'
+        - type: object
           required:
-            - "results"
+            - results
           properties:
             results:
-              type: "array"
+              type: array
               items:
-                $ref: "#/components/schemas/Result"
+                $ref: '#/components/schemas/Result'
     OpenRequest:
       allOf:
-        - $ref: "#/components/schemas/Response"
-        - type: "object"
+        - $ref: '#/components/schemas/Response'
+        - type: object
           required:
-            - "request"
+            - request
           properties:
             request:
-              type: "string"
+              type: string
     SelectionRequest:
       allOf:
-        - $ref: "#/components/schemas/Response"
-        - type: "object"
+        - $ref: '#/components/schemas/Response'
+        - type: object
           required:
-            - "message"
-            - "options"
+            - message
+            - options
           properties:
             message:
-              type: "string"
+              type: string
             options:
-              type: "array"
+              type: array
               items:
-                $ref: "#/components/schemas/LabeledElement"
+                $ref: '#/components/schemas/LabeledElement'
     FormRequest:
       allOf:
-        - $ref: "#/components/schemas/Response"
-        - type: "object"
+        - $ref: '#/components/schemas/Response'
+        - type: object
           required:
-            - "elements"
+            - elements
           properties:
             elements:
-              type: "array"
+              type: array
               items:
-                $ref: "#/components/schemas/LabeledElement"
+                $ref: '#/components/schemas/LabeledElement'
     WaitRequest:
       allOf:
-        - $ref: "#/components/schemas/Response"
+        - $ref: '#/components/schemas/Response'
     FormElement:
-      type: "object"
-      description: "the value given to an element of the form"
+      type: object
+      description: the value given to an element of the form
       required:
-        - "id"
-        - "value"
+        - id
+        - value
       properties:
         id:
-          type: "integer"
-          description: "the ID of the element, unique in the form"
+          type: integer
+          description: the ID of the element, unique in the form
         value:
-          type: "string"
-          description: "the value given for this element"
+          type: string
+          description: the value given for this element
     Result:
-      type: "object"
+      type: object
       required:
-        - "text"
-        - "score"
-        - "documentURI"
+        - text
+        - score
+        - documentURI
       properties:
         text:
-          type: "string"
+          type: string
         score:
-          $ref: "#/components/schemas/Score"
+          $ref: '#/components/schemas/Score'
         documentURI:
-          type: "string"
+          type: string
           nullable: true
     LabeledElement:
-      type: "object"
+      type: object
       required:
-        - "id"
-        - "label"
+        - id
+        - label
       properties:
         id:
-          type: "number"
-          format: "int32"
+          type: number
+          format: int32
         label:
-          type: "string"
+          type: string
     Score:
-      type: "number"
-      format: "double"
+      type: number
+      format: double
       example: 0.89

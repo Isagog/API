@@ -1,200 +1,200 @@
 openapi: 3.0.0
 info:
-  title: "Isagog Faq System"
-  version: "1.0.0"
-  description: "The FAQ system agent of the Isagog Faq System (DQA)"
+  title: Isagog Faq System
+  version: 1.0.0
+  description: The FAQ system agent of the Isagog Faq System (DQA)
   contact:
-    email: "api@isagog.com"
+    email: api@isagog.com
   license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-  - url: "http://localhost"
+  - url: http://localhost
     variables:
       port:
-        default: "3500"
+        default: '3500'
       basePath:
-        default: "/"
+        default: /
 tags:
-  - name: "faq"
-    description: "Query the FAQ system"
+  - name: faq
+    description: Query the FAQ system
 paths:
   /categories:
     get:
       tags:
-        - "faq"
-      summary: "Get the list of all the categories"
-      operationId: "categories"
+        - faq
+      summary: Get the list of all the categories
+      operationId: categories
       responses:
         200:
-          $ref: "#/components/responses/Categories"
+          $ref: '#/components/responses/Categories'
   /categories/{categoryId}:
     post:
       tags:
-        - "faq"
-      summary: "Update the threshold value"
-      operationId: "updateThreshold"
+        - faq
+      summary: Update the threshold value
+      operationId: updateThreshold
       parameters:
-        - name: "categoryId"
-          in: "path"
-          description: "the category ID"
+        - name: categoryId
+          in: path
+          description: the category ID
           required: true
           schema:
-            type: "string"
-        - name: "threshold"
-          in: "query"
-          description: "the category threshold"
+            type: string
+        - name: threshold
+          in: query
+          description: the category threshold
           required: true
           schema:
-            type: "number"
-            format: "double"
+            type: number
+            format: double
       responses:
         200:
-          $ref: "#/components/responses/CategoryUpdated"
+          $ref: '#/components/responses/CategoryUpdated'
   /sources:
     get:
       tags:
-        - "faq"
-      summary: "Get the list of all the sources"
-      operationId: "getSources"
+        - faq
+      summary: Get the list of all the sources
+      operationId: getSources
       responses:
         200:
-          $ref: "#/components/responses/Sources"
+          $ref: '#/components/responses/Sources'
   /sources/add:
     put:
       tags:
-        - "faq"
-      summary: "Add a new source"
-      operationId: "addSource"
+        - faq
+      summary: Add a new source
+      operationId: addSource
       requestBody:
-        $ref: "#/components/requestBodies/Source"
+        $ref: '#/components/requestBodies/Source'
       responses:
         200:
-          description: "source added successfully"
+          description: source added successfully
   /faqs/compare:
     get:
       tags:
-        - "faq"
-      summary: "Compare and search similar FAQs"
-      operationId: "compare"
+        - faq
+      summary: Compare and search similar FAQs
+      operationId: compare
       parameters:
-        - name: "question"
-          in: "query"
-          description: "The question to search"
+        - name: question
+          in: query
+          description: The question to search
           required: true
           schema:
-            type: "string"
-        - name: "confidence"
-          in: "query"
-          description: "whether to fetch only the FAQs that pass the category threshold"
+            type: string
+        - name: confidence
+          in: query
+          description: whether to fetch only the FAQs that pass the category threshold
           required: false
           schema:
-            type: "boolean"
+            type: boolean
             default: false
-        - name: "category"
-          in: "query"
-          description: "the category filter. To fetch only the FAQs of this category"
+        - name: category
+          in: query
+          description: the category filter. To fetch only the FAQs of this category
           required: false
           schema:
-            type: "string"
-        - name: "source"
-          in: "query"
-          description: "the source filter. To fetch only the FAQs of this source"
+            type: string
+        - name: source
+          in: query
+          description: the source filter. To fetch only the FAQs of this source
           required: false
           schema:
-            type: "string"
+            type: string
       responses:
         200:
-          $ref: "#/components/responses/Faqs"
+          $ref: '#/components/responses/Faqs'
   /faqs/search:
     get:
       tags:
-        - "faq"
-      summary: "Get the FAQs list"
-      operationId: "faqs"
+        - faq
+      summary: Get the FAQs list
+      operationId: faqs
       parameters:
-        - name: "size"
-          in: "query"
-          description: "the number of FAQs to return"
+        - name: size
+          in: query
+          description: the number of FAQs to return
           required: true
           schema:
-            type: "integer"
+            type: integer
             minimum: 1
             maximum: 50
-        - name: "from"
-          in: "query"
-          description: "the number of FAQs to skip before starting to collect the result set"
+        - name: from
+          in: query
+          description: the number of FAQs to skip before starting to collect the result set
           required: true
           schema:
-            type: "integer"
+            type: integer
             minimum: 0
       responses:
         200:
-          $ref: "#/components/responses/Faqs"
+          $ref: '#/components/responses/Faqs'
   /faqs/add:
     post:
       tags:
-        - "faq"
-      summary: "Add FAQs"
-      operationId: "addFaqs"
+        - faq
+      summary: Add FAQs
+      operationId: addFaqs
       requestBody:
-        $ref: "#/components/requestBodies/AddingFaqs"
+        $ref: '#/components/requestBodies/AddingFaqs'
       responses:
         200:
-          $ref: "#/components/responses/AddFaqs"
+          $ref: '#/components/responses/AddFaqs'
   /faqs/{faqId}:
     post:
       tags:
-        - "faq"
-      summary: "Update a FAQ"
-      operationId: "updateFaq"
+        - faq
+      summary: Update a FAQ
+      operationId: updateFaq
       parameters:
-        - $ref: "#/components/parameters/FaqId"
+        - $ref: '#/components/parameters/FaqId'
       requestBody:
         $ref: '#/components/requestBodies/UpdateFaq'
       responses:
         200:
-          $ref: "#/components/responses/UpdateFaq"
+          $ref: '#/components/responses/UpdateFaq'
   /faqs/{faqId}/delete:
     delete:
       tags:
-        - "faq"
-      summary: "Delete a FAQ"
-      operationId: "deleteFaq"
+        - faq
+      summary: Delete a FAQ
+      operationId: deleteFaq
       parameters:
-        - $ref: "#/components/parameters/FaqId"
+        - $ref: '#/components/parameters/FaqId'
       responses:
         200:
-          $ref: "#/components/responses/DeleteFaq"
+          $ref: '#/components/responses/DeleteFaq'
 components:
   parameters:
     FaqId:
-      name: "faqId"
-      in: "path"
-      description: "the Faq ID"
+      name: faqId
+      in: path
+      description: the Faq ID
       required: true
       schema:
-        type: "string"
+        type: string
   requestBodies:
     AddingFaqs:
-      description: "the bodies of the adding FAQs"
+      description: the bodies of the adding FAQs
       required: true
       content:
         application/json:
           schema:
-            description: "the list of FAQs to add"
-            type: "array"
+            description: the list of FAQs to add
+            type: array
             items:
               $ref: '#/components/schemas/FaqBody'
     UpdateFaq:
-      description: "the partial body of a FAQ"
+      description: the partial body of a FAQ
       required: true
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/FaqPartialBody'
     Source:
-      description: "the body of a source"
+      description: the body of a source
       required: true
       content:
         application/json:
@@ -202,178 +202,178 @@ components:
             $ref: '#/components/schemas/Source'
   responses:
     Categories:
-      description: "Success"
+      description: Success
       content:
         application/json:
           schema:
-            description: "the list of all the categories"
-            type: "array"
+            description: the list of all the categories
+            type: array
             items:
-              $ref: "#/components/schemas/Category"
+              $ref: '#/components/schemas/Category'
     CategoryUpdated:
-      description: "Success"
+      description: Success
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Category'
     Sources:
-      description: "the list of all the sources"
+      description: the list of all the sources
       content:
         application/json:
           schema:
-            description: "List of Sources"
-            type: "array"
+            description: List of Sources
+            type: array
             items:
-              $ref: "#/components/schemas/Source"
+              $ref: '#/components/schemas/Source'
     Faqs:
-      description: "success"
+      description: success
       content:
         application/json:
           schema:
-            description: "a list of Faqs"
-            type: "array"
+            description: a list of Faqs
+            type: array
             items:
-              $ref: "#/components/schemas/Faq"
+              $ref: '#/components/schemas/Faq'
     AddFaqs:
-      description: "request handled"
+      description: request handled
       content:
         application/json:
           schema:
-            description: "the list of added FAQs"
-            type: "array"
+            description: the list of added FAQs
+            type: array
             items:
-              $ref: "#/components/schemas/AddFaqResponse"
+              $ref: '#/components/schemas/AddFaqResponse'
     UpdateFaq:
-      description: "request handled"
+      description: request handled
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/UpdateFaqResponse"
+            $ref: '#/components/schemas/UpdateFaqResponse'
     DeleteFaq:
-      description: "request handled"
+      description: request handled
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/DeleteFaqResponse"
+            $ref: '#/components/schemas/DeleteFaqResponse'
   schemas:
     Category:
-      description: "a category"
-      type: "object"
+      description: a category
+      type: object
       required:
-        - "id"
-        - "name"
-        - "threshold"
+        - id
+        - name
+        - threshold
       properties:
         id:
-          description: "the category ID"
-          type: "string"
+          description: the category ID
+          type: string
         name:
-          description: "the category name"
-          type: "string"
+          description: the category name
+          type: string
         threshold:
-          description: "the score threshold for the category"
-          type: "number"
-          format: "double"
+          description: the score threshold for the category
+          type: number
+          format: double
     Source:
-      description: "a source of FAQs"
-      type: "object"
+      description: a source of FAQs
+      type: object
       required:
-        - "name"
+        - name
       properties:
         name:
-          description: "the source name"
-          type: "string"
+          description: the source name
+          type: string
     Faq:
       allOf:
-        - $ref: "#/components/schemas/FaqBody"
-        - description: "a FAQ"
-          type: "object"
+        - $ref: '#/components/schemas/FaqBody'
+        - description: a FAQ
+          type: object
           required:
-            - "id"
-            - "score"
+            - id
+            - score
           properties:
             id:
-              description: "the FAQ ID"
-              type: "string"
+              description: the FAQ ID
+              type: string
             score:
-              description: "the FAQ score"
-              type: "number"
-              format: "double"
+              description: the FAQ score
+              type: number
+              format: double
     FaqBody:
-      type: "object"
+      type: object
       required:
-        - "question"
-        - "answer"
-        - "category"
-        - "source"
+        - question
+        - answer
+        - category
+        - source
       properties:
         question:
-          type: "string"
+          type: string
         answer:
-          type: "string"
+          type: string
         category:
-          type: "string"
+          type: string
         source:
-          type: "string"
+          type: string
         verified_at:
-          $ref: "#/components/schemas/DateStr"
+          $ref: '#/components/schemas/DateStr'
     FaqPartialBody:
-      type: "object"
+      type: object
       properties:
         question:
-          type: "string"
+          type: string
         answer:
-          type: "string"
+          type: string
         category:
-          type: "string"
+          type: string
         source:
-          type: "string"
+          type: string
         verified_at:
-          $ref: "#/components/schemas/DateStr"
+          $ref: '#/components/schemas/DateStr'
     AddFaqResponse:
-      description: "the response to a FAQ creation request"
-      type: "object"
+      description: the response to a FAQ creation request
+      type: object
       required:
-        - "id"
-        - "question"
-        - "created"
+        - id
+        - question
+        - created
       properties:
         id:
-          description: "the FAQ ID"
-          type: "string"
+          description: the FAQ ID
+          type: string
         question:
-          description: "the question of the FAQ"
-          type: "string"
+          description: the question of the FAQ
+          type: string
         created:
-          description: "whether the FAQ has been created"
-          type: "boolean"
+          description: whether the FAQ has been created
+          type: boolean
     UpdateFaqResponse:
-      description: "the response to a FAQ update request"
-      type: "object"
+      description: the response to a FAQ update request
+      type: object
       required:
-        - "id"
-        - "updated"
+        - id
+        - updated
       properties:
         id:
-          description: "the FAQ ID"
-          type: "string"
+          description: the FAQ ID
+          type: string
         updated:
-          description: "whether the FAQ has been updated"
-          type: "boolean"
+          description: whether the FAQ has been updated
+          type: boolean
     DeleteFaqResponse:
-      description: "the response to a FAQ cancellation request"
-      type: "object"
+      description: the response to a FAQ cancellation request
+      type: object
       required:
-        - "id"
-        - "deleted"
+        - id
+        - deleted
       properties:
         id:
-          description: "the FAQ ID"
-          type: "string"
+          description: the FAQ ID
+          type: string
         deleted:
-          description: "whether the FAQ has been deleted"
-          type: "boolean"
+          description: whether the FAQ has been deleted
+          type: boolean
     DateStr:
-      type: "string"
-      format: "date-time"
-      example: "2017-07-21T17:32:28Z"
+      type: string
+      format: date-time
+      example: 2017-07-21T17:32:28Z

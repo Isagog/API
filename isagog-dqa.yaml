@@ -2,21 +2,21 @@ openapi: 3.0.0
 info:
   title: Isagog Documental Question Answering
   version: 1.0.0
-  description: >-
-    Documental Question Answering Server. Receives questions, searches
-    document collections for answers, and returns them back.
+  description: |
+    Documental Question Answering Server.
+    Receive questions, search in document collections for answers, and return them back.
   contact:
     email: api@isagog.com
   license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-  - url: "http://localhost"
+  - url: http://localhost
     variables:
       port:
-        default: "3300"
+        default: '3300'
       basePath:
-        default: "/v1"
+        default: /v1
 paths:
   /AskQuestion:
     post:
@@ -28,7 +28,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: Found list of candidate answers
           content:
             application/json:
@@ -36,8 +36,8 @@ paths:
                 description: a ranked list of candidate answers
                 type: array
                 items:
-                  $ref: "#/components/schemas/CandidateAnswer"
-        '500':
+                  $ref: '#/components/schemas/CandidateAnswer'
+        500:
           description: Answer not found
 components:
   schemas:

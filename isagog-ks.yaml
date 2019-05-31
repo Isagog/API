@@ -7,33 +7,33 @@ info:
     email: api@isagog.com
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-  - url: "http://localhost"
+  - url: http://localhost
     variables:
       port:
-        default: "3200"
+        default: '3200'
       basePath:
-        default: "/"
+        default: /
 tags:
   - name: KnowledgeGraph
-    description: 'A Knowledge Graph (a,.k.a. Knowledge Base)'
+    description: A Knowledge Graph (a.k.a. Knowledge Base)
     externalDocs:
       description: Find out more
-      url: 'http://isagog.com'
+      url: http://isagog.com
   - name: KnowledgeItem
-    description: 'A Knowledge Item (a Concept, a Role, or an Entity)'
+    description: A Knowledge Item (a Concept, a Role, or an Entity)
   - name: Ontology
     description: Ontologies
     externalDocs:
       description: Find out more
-      url: 'http://isagog.com'
+      url: http://isagog.com
   - name: KnowledgeService
     externalDocs:
-      url: 'http://isagog.com/ks'
+      url: http://isagog.com/ks
     description: Isagog Knowledge Service
 paths:
-  '/item/{kg}/{id}':
+  /item/{kg}/{id}:
     get:
       summary: Path to a Knowledge Item in a Knowledge Graph
       description: Returns the Knowledge Item with the supplied id
@@ -53,13 +53,13 @@ paths:
           description: The Knowledge Item identifier
       operationId: getItem
       responses:
-        '200':
+        200:
           description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/KnowledgeItem'
-        '400':
+        400:
           description: Not found
       tags:
         - KnowledgeService
@@ -83,13 +83,13 @@ paths:
           description: The KnowledgeItem identifier
       operationId: updateItem
       responses:
-        '200':
+        200:
           description: Update successful
-        '201':
+        201:
           description: Creation successful
-        '400':
+        400:
           description: Update failed
-        '401':
+        401:
           description: Creation failed
       requestBody:
         content:
@@ -100,10 +100,10 @@ paths:
         required: true
       tags:
         - KnowledgeService
-  '/concept/{oid}/{cid}':
+  /concept/{oid}/{cid}:
     get:
-      summary: Path to a concept in an Ontology
-      description: ''
+      summary: Ontology concept
+      description: Get the path to a concept in an Ontology
       parameters:
         - name: oid
           in: path
@@ -117,7 +117,7 @@ paths:
             type: string
       operationId: getConcept
       responses:
-        '200':
+        200:
           description: Description
           content:
             application/json:
@@ -125,10 +125,10 @@ paths:
                 $ref: '#/components/schemas/Concept'
       tags:
         - KnowledgeService
-  '/concept/{oid}/{cid}/definition':
+  /concept/{oid}/{cid}/definition:
     get:
       summary: Concept definition
-      description: Returns the list of defining (i.e. immediately superordinate) concepts
+      description: Get the list of defining (i.e. immediately superordinate) concepts
       parameters:
         - name: oid
           in: path
@@ -142,7 +142,7 @@ paths:
             type: string
       operationId: getDefinition
       responses:
-        '200':
+        200:
           description: Success
           content:
             application/json:
@@ -152,12 +152,12 @@ paths:
                   $ref: '#/components/schemas/Concept'
       tags:
         - KnowledgeService
-  '/graph/{kg}':
+  /graph/{kg}:
     get:
       tags:
         - KnowledgeService
       summary: Retrieves a Knowledge Graph
-      description: 'Returns a Knowledge Graph, either with summary or full content'
+      description: Returns a Knowledge Graph, either with summary or full content
       operationId: getGraph
       parameters:
         - name: kg
@@ -172,23 +172,23 @@ paths:
           required: true
           schema:
             type: boolean
-            default: 'false'
+            default: false
           description: 'triggers full content: default = false'
           allowEmptyValue: true
       responses:
-        '200':
+        200:
           description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/KnowledgeGraph'
-        '201':
+        201:
           description: Unknown KG
-        '400':
+        400:
           description: Invalid query
       security:
         - isagog_auth_auth:
-            - 'read:knowledge'
+            - read:knowledge
     summary: Knowledge Graph
     description: Returns a Knowledge Graph
     post:
@@ -204,13 +204,13 @@ paths:
           description: The Knowledge Graph identifier
       operationId: updateGraph
       responses:
-        '200':
+        200:
           description: Update successful
-        '201':
+        201:
           description: Creation successful
-        '400':
+        400:
           description: Update failed
-        '401':
+        401:
           description: Creation failed
       requestBody:
         content:
@@ -221,7 +221,7 @@ paths:
         required: true
       tags:
         - KnowledgeService
-  '/graph/{kg}/conjquery':
+  /graph/{kg}/conjquery:
     post:
       summary: Conjunctive query
       description: Queries a conjunctive query in a Knowledge Graph
@@ -235,17 +235,17 @@ paths:
           description: The Knowledge Graph identifier
       operationId: conjunctiveQuery
       responses:
-        '200':
+        200:
           description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/QueryResponse'
-        '400':
+        400:
           description: Unknown graph
-        '401':
+        401:
           description: Invalid query
-        '402':
+        402:
           description: Service unavailable
       tags:
         - KnowledgeService
@@ -256,7 +256,7 @@ paths:
               $ref: '#/components/schemas/ConjunctiveQuery'
         description: The conjunctive query
         required: true
-  '/graph/{kg}/framequery':
+  /graph/{kg}/framequery:
     post:
       summary: Frame query
       description: Queries a frame in a Knowledge Graph
@@ -270,17 +270,17 @@ paths:
           description: The Knowledge Graph identifier
       operationId: frameQuery
       responses:
-        '200':
+        200:
           description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/QueryResponse'
-        '400':
+        400:
           description: Unknown graph
-        '401':
+        401:
           description: Invalid query
-        '402':
+        402:
           description: Service unavailable
       tags:
         - KnowledgeService
@@ -291,12 +291,10 @@ paths:
               $ref: '#/components/schemas/Frame'
         description: The conjunctive query
         required: true
-  '/graph/{kg}/conceptualize':
+  /graph/{kg}/conceptualize:
     post:
       summary: Conceptualizes a Natural Language sentence
-      description: >-
-        Provides a conceptual account of the supplied sentence according to the
-        Knowledge Graph
+      description: Provides a conceptual account of the supplied sentence according to the Knowledge Graph
       parameters:
         - name: kg
           in: path
@@ -307,17 +305,17 @@ paths:
           description: The Knowledge Graph identifier
       operationId: conceptualizeSentence
       responses:
-        '200':
+        200:
           description: Success
           content:
             application/json:
               schema:
-                 $ref: '#/components/schemas/ConceptualMapping'
-        '400':
+                $ref: '#/components/schemas/ConceptualMapping'
+        400:
           description: Unknown graph
-        '401':
+        401:
           description: Invalid sentence
-        '402':
+        402:
           description: Service unavailable
       tags:
         - KnowledgeService
@@ -328,12 +326,10 @@ paths:
               $ref: 'isagog-nlp.yaml#/components/schemas/LinguisticAnalysis'
         description: The sentence to be analyzed
         required: true
-  '/graph/{kg}/frame':
+  /graph/{kg}/frame:
     post:
       summary: Frames a Natural Language sentence
-      description: >-
-        Retrieves frames evoked by the supplied sentence according to the
-        Knowledge Graph
+      description: Retrieves frames evoked by the supplied sentence according to the Knowledge Graph
       parameters:
         - name: kg
           in: path
@@ -344,18 +340,18 @@ paths:
           description: The Knowledge Graph identifier
       operationId: frameSentence
       responses:
-        '200':
+        200:
           description: Success
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/FrameResponse'
-        '400':
-          description: "Unknown graph"
-        '401':
-          description: "Invalid sentence"
-        '500':
-          description: "Server error"
+        400:
+          description: Unknown graph
+        401:
+          description: Invalid sentence
+        500:
+          description: Server error
       tags:
         - KnowledgeService
       requestBody:
@@ -365,7 +361,7 @@ paths:
               $ref: '#/components/schemas/FrameRequestBody'
         description: The sentence to be analyzed
         required: true
-  '/entity/{kg}/{id}/classify':
+  /entity/{kg}/{id}/classify:
     get:
       summary: Knowledge Entity (individual) classification
       description: Lists all the classes to which the individual belongs
@@ -388,30 +384,7 @@ paths:
             type: boolean
       operationId: classifyEntity
       responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ClassificationResponse'
-      tags:
-        - KnowledgeService
-  '/ontology/{oid}':
-    get:
-      summary: Path to ontology
-      description: Gets an ontology spec
-      parameters:
-        - name: oid
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The Ontology identifier
-      operationId: getOntology
-      responses:
-        '200':
+        200:
           description: Success
           content:
             application/json:
@@ -419,7 +392,7 @@ paths:
                 $ref: '#/components/schemas/Ontology'
       tags:
         - KnowledgeService
-  '/entity/{kg}/{id}/evaluate':
+  /entity/{kg}/{id}/evaluate:
     get:
       summary: Knowledge Entity (individual) evaluation
       description: Evaluates the Knowledge Item as an instance of the specified concept
@@ -451,22 +424,22 @@ paths:
             enum:
               - Deduction
               - Abduction
-            default: deduction
+            default: Deduction
           description: The inference method to be used
           allowEmptyValue: true
       operationId: evaluateEntity
       responses:
-        '200':
+        200:
           description: Description
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClassificationResponse'
-        '201':
+        201:
           description: Not found
       tags:
         - KnowledgeService
-  '/graph/{kg}/search':
+  /graph/{kg}/search:
     get:
       tags:
         - KnowledgeService
@@ -496,31 +469,31 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: successful operation
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/KnowledgeSearchResult'
-        '201':
+                $ref: '#/components/schemas/KnowledgeSearchResult'
+        201:
           description: no results
-        '400':
+        400:
           description: unknown graph
-        '401':
+        401:
           description: invalid property
       security:
         - isagog_auth_auth:
-            - 'read:knowledge'
+            - read:knowledge
 externalDocs:
   description: See Isagog Knowledge API example
-  url: 'https://isagog.com/knowledge/asyncapi.html'
+  url: https://isagog.com/knowledge/asyncapi.html
 components:
   schemas:
     KnowledgeItem:
       required:
-       - subject
-       - predicate
-       - objects
+        - subject
+        - predicate
+        - objects
       type: object
       properties:
         subject:
@@ -540,8 +513,8 @@ components:
         name: KnowledgeItem
     KnowledgeGraph:
       required:
-         - id
-         - content
+        - id
+        - content
       type: object
       properties:
         id:
@@ -575,7 +548,7 @@ components:
             $ref: '#/components/schemas/KnowledgeItem'
     ConjunctiveQuery:
       required:
-       - body
+        - body
       type: object
       properties:
         time:
@@ -650,15 +623,15 @@ components:
       required:
         - classifier
       properties:
-          classifier:
-            $ref: '#/components/schemas/Concept'
-          support:
-            $ref: '#/components/schemas/Support'
+        classifier:
+          $ref: '#/components/schemas/Concept'
+        support:
+          $ref: '#/components/schemas/Support'
     QueryResponse:
       type: object
       required:
-         - header
-         - rows
+        - header
+        - rows
       properties:
         time:
           type: integer
@@ -684,7 +657,7 @@ components:
         rows:
           type: array
           items:
-           $ref: '#/components/schemas/QueryResponseItem'
+            $ref: '#/components/schemas/QueryResponseItem'
     QueryResponseItem:
       type: object
       required:
@@ -723,11 +696,10 @@ components:
           enum:
             - Property
             - Attribute
-
     Ontology:
       type: object
       required:
-       - id  
+        - id
       properties:
         id:
           type: string
@@ -744,10 +716,10 @@ components:
     Frame:
       type: object
       required:
-       - id
-       - ftype
-       - intents
-       - slots
+        - id
+        - ftype
+        - intents
+        - slots
       properties:
         id:
           type: string
@@ -768,25 +740,25 @@ components:
             $ref: '#/components/schemas/Slot'
 
         support:
-              $ref: '#/components/schemas/Support'
+          $ref: '#/components/schemas/Support'
     Slot:
       type: object
       required:
-       - id
-       - stype
+        - id
+        - stype
       properties:
         id:
           type: string
         stype:
           type: string
           enum:
-           - Classification
-           - Relation
-           - Equals
-           - Greater
-           - Lesser
-           - Like
-           - Any
+            - Classification
+            - Relation
+            - Equals
+            - Greater
+            - Lesser
+            - Like
+            - Any
         mandatory:
           type: boolean
         pragType:
@@ -807,7 +779,7 @@ components:
         subjectBinding:
           type: string
         objectBinding:
-           type: string
+          type: string
         values:
           type: array
           items:
@@ -815,13 +787,13 @@ components:
         restrictions:
           type: array
           items:
-             type: string
+            type: string
         support:
           $ref: '#/components/schemas/Support'
         sentenceMapping:
           type: array
           items:
-            $ref: 'isagog-nlp.yaml#/components/schemas/Position'
+            $ref: isagog-nlp.yaml#/components/schemas/Position
     SlotValue:
       type: object
       required:
@@ -832,16 +804,15 @@ components:
         sourceType:
           type: string
           enum:
-           - UserInput
-           - KnowlegdeBase
+            - UserInput
+            - KnowlegdeBase
         valueType:
           type: string
           enum:
-           - Identifier
-           - Token
+            - Identifier
+            - Token
         value:
           type: string
-
     ConceptualMapping:
       type: object
       required:
@@ -856,7 +827,6 @@ components:
           format: int32
         report:
           type: string
-
     ConceptualMappingElement:
       type: object
       required:
@@ -865,28 +835,27 @@ components:
         - endIndex
       properties:
         concept:
-            type: string
-            format: uri
+          type: string
+          format: uri
         semType:
-            type: string
-            enum:
-              - Concept
-              - Relation
-              - Attribute
-              - Entity
-
+          type: string
+          enum:
+            - Concept
+            - Relation
+            - Attribute
+            - Entity
         startIndex:
-            type: integer
-            format: int32
+          type: integer
+          format: int32
         endIndex:
-            type: integer
-            format: int32
+          type: integer
+          format: int32
         support:
-            $ref: '#/components/schemas/Support'
+          $ref: '#/components/schemas/Support'
     Support:
       type: object
       required:
-       - evidence
+        - evidence
       properties:
         evidence:
           type: number
@@ -895,38 +864,38 @@ components:
           type: number
           format: double
     FrameRequestBody:
-       type: object
-       required:
-           - sentence
-       properties:
-           sentence:
-             type: string           
-           analysis:
-             $ref: 'isagog-nlp.yaml#/components/schemas/NLPAnalysis'
-           concepts:
-             type: array
-             items:
-                $ref: '#/components/schemas/ConceptualMapping'
+      type: object
+      required:
+        - sentence
+      properties:
+        sentence:
+          type: string
+        analysis:
+          $ref: 'isagog-nlp.yaml#/components/schemas/NLPAnalysis'
+        concepts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConceptualMapping'
     FrameResponse:
       type: object
       required:
-         - frames
+        - frames
       properties:
-         frames:
-           type: array         
-           items:
-              $ref: '#/components/schemas/Frame'
-         report:
-            type: string        
+        frames:
+          type: array
+          items:
+            $ref: '#/components/schemas/Frame'
+        report:
+          type: string
   securitySchemes:
     isagog_auth:
       type: oauth2
       flows:
         implicit:
-          authorizationUrl: 'http://isagog.com/oauth/dialog'
+          authorizationUrl: http://isagog.com/oauth/dialog
           scopes:
-            'write:knowledge': modify Knowledge Graphs in your account
-            'read:knowedge': read Knowledge Graphs in your account
+            write:knowledge: modify Knowledge Graphs in your account
+            read:knowedge: read Knowledge Graphs in your account
     api_key:
       type: apiKey
       name: api_key
