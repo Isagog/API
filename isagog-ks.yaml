@@ -633,6 +633,8 @@ components:
         - header
         - rows
       properties:
+        query:
+          type: string
         time:
           type: integer
           format: int64
