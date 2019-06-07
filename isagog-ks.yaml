@@ -635,6 +635,8 @@ components:
       properties:
         query:
           type: string
+        report:
+          type: string
         time:
           type: integer
           format: int64
