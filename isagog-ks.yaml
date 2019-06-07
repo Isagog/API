@@ -748,6 +748,7 @@ components:
       required:
         - id
         - stype
+        - ontologyReference
       properties:
         id:
           type: string
@@ -756,11 +757,7 @@ components:
           enum:
             - Classification
             - Relation
-            - Equals
-            - Greater
-            - Lesser
-            - Like
-            - Any
+            - Attribute
         mandatory:
           type: boolean
         pragType:
@@ -774,10 +771,13 @@ components:
             - OutOptPlus
             - OutOptAvg
             - Any
-        conceptBinding:
-          $ref: '#/components/schemas/Concept'
-        relationBinding:
-          $ref: '#/components/schemas/Relation'
+        lexicalAnnotations:
+          type: array
+          items:
+            $ref: '#/components/schemas/LexicalItem'
+        ontologyReference:
+          type: string
+          format: uri
         subjectBinding:
           type: string
         objectBinding:
@@ -854,6 +854,15 @@ components:
           format: int32
         support:
           $ref: '#/components/schemas/Support'
+    LexicalItem:
+      type: object
+      required:
+        - form
+      properties:
+        form:
+          type: string
+        pos:
+          $ref: 'isagog-nlp.yaml#/components/schemas/POSBase'
     Support:
       type: object
       required:
@@ -873,7 +882,7 @@ components:
         sentence:
           type: string
         analysis:
-          $ref: 'isagog-nlp.yaml#/components/schemas/NLPAnalysis'
+          $ref: 'isagog-nlp.yaml#/components/schemas/LinguisticAnalysis'
         concepts:
           type: array
           items:
