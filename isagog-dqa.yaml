@@ -21,7 +21,7 @@ tags:
     - name: dqa
       description: Query the DQA system
 paths:
-  /AskQuestion:
+  /search:
     post:
       tags:
         - dqa
