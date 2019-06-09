@@ -17,9 +17,14 @@ servers:
         default: '3300'
       basePath:
         default: /v1
+tags:
+    - name: dqa
+      description: Query the DQA system
 paths:
   /AskQuestion:
     post:
+      tags:
+        - dqa
       summary: Search for answers to a natural language question
       parameters:
         - in : query
