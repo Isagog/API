@@ -26,6 +26,7 @@ paths:
       tags:
         - dqa
       summary: Search for answers to a natural language question
+      operationId: search
       requestBody:
         $ref: '#/components/requestBodies/InputText'
       responses:
