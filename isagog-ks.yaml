@@ -795,9 +795,14 @@ components:
         support:
           $ref: '#/components/schemas/Support'
         sentenceMapping:
-          type: array
-          items:
-            $ref: isagog-nlp.yaml#/components/schemas/Position
+          type: object
+          properties:
+            startIndex:
+              type: integer
+              format: int32
+            endIndex:
+              type: integer
+              format: int32
     SlotValue:
       type: object
       required:
