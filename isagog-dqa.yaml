@@ -17,16 +17,18 @@ servers:
         default: '3300'
       basePath:
         default: /v1
+tags:
+    - name: dqa
+      description: Query the DQA system
 paths:
-  /AskQuestion:
+  /search:
     post:
+      tags:
+        - dqa
       summary: Search for answers to a natural language question
-      parameters:
-        - in : query
-          name: text
-          required: true
-          schema:
-            type: string
+      operationId: search
+      requestBody:
+        $ref: '#/components/requestBodies/InputText'
       responses:
         200:
           description: Found list of candidate answers
@@ -40,7 +42,22 @@ paths:
         500:
           description: Answer not found
 components:
+  requestBodies:
+    InputText:
+      description: The input text
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InputText'
   schemas:
+    InputText:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
     CandidateAnswer:
       description: a candidate answer
       type: object
