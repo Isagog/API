@@ -221,41 +221,7 @@ paths:
         required: true
       tags:
         - KnowledgeService
-  /graph/{kg}/conjquery:
-    post:
-      summary: Conjunctive query
-      description: Queries a conjunctive query in a Knowledge Graph
-      parameters:
-        - name: kg
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uri
-          description: The Knowledge Graph identifier
-      operationId: conjunctiveQuery
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/QueryResponse'
-        400:
-          description: Unknown graph
-        401:
-          description: Invalid query
-        402:
-          description: Service unavailable
-      tags:
-        - KnowledgeService
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConjunctiveQuery'
-        description: The conjunctive query
-        required: true
+
   /graph/{kg}/framequery:
     post:
       summary: Frame query
@@ -546,26 +512,6 @@ components:
             wrapped: true
           items:
             $ref: '#/components/schemas/KnowledgeItem'
-    ConjunctiveQuery:
-      required:
-        - body
-      type: object
-      properties:
-        time:
-          type: integer
-          format: int64
-        lang:
-          type: string
-          enum:
-            - SPARQL
-            - DATALOG
-            - SQL
-          default:  SPARQL
-        body:
-          type: string
-        limit:
-          type: integer
-          format: int32
     KnowledgeUpdate:
       required:
         - id
