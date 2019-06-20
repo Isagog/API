@@ -375,7 +375,7 @@ paths:
           required: true
           schema:
             type: string
-          description: The Knowledge Item identifier
+          description: The entity identifier
         - name: concept
           in: query
           required: true
