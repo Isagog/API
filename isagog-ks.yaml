@@ -17,7 +17,7 @@ servers:
         default: /
 tags:
   - name: KnowledgeGraph
-    description: A Knowledge Graph (a.k.a. Knowledge Base)
+    description: A Knowledge Graph (Knowledge Base Assertional Layer)
     externalDocs:
       description: Find out more
       url: http://isagog.com
@@ -410,7 +410,7 @@ paths:
       tags:
         - KnowledgeService
       summary: Knowledge Items property search
-      description: Finds Knowedge Items by searching values
+      description: Finds Knowledge Items by searching values
       operationId: searchItem
       parameters:
         - name: kg
@@ -455,6 +455,14 @@ externalDocs:
   url: https://isagog.com/knowledge/asyncapi.html
 components:
   schemas:
+    KnowledgeServiceResponse:
+      type: object
+      properties:
+          time:
+            type: integer
+            format: int64
+          report:
+            type: string
     KnowledgeItem:
       required:
         - subject
@@ -536,34 +544,36 @@ components:
           items:
             $ref: '#/components/schemas/KnowledgeItem'
     KnowledgeSearchResult:
-      required:
-        - items
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/KnowledgeItem'
-        report:
-          type: string
+      allOf:
+        - $ref: '#/components/schemas/KnowledgeServiceResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/KnowledgeItem'
+            report:
+              type: string
     ClassificationResponse:
-      required:
-        - result
-      type: object
-      properties:
-        time:
-          type: integer
-          format: int64
-        method:
-          type: string
-          enum:
-            - Deduction
-            - Abduction
-          default: Deduction
-        result:
-          type: array
-          items:
-            $ref: '#/components/schemas/Classification'
+      allOf:
+        - $ref: '#/components/schemas/KnowledgeServiceResponse'
+        - type: object
+          properties:
+            time:
+              type: integer
+              format: int64
+            method:
+              type: string
+              enum:
+                - Deduction
+                - Abduction
+              default: Deduction
+            report:
+              type: string
+            result:
+              type: array
+              items:
+                $ref: '#/components/schemas/Classification'
     Classification:
       type: object
       required:
@@ -574,40 +584,39 @@ components:
         support:
           $ref: '#/components/schemas/Support'
     QueryResponse:
-      type: object
-      required:
-        - header
-        - rows
-      properties:
-        query:
-          type: string
-        report:
-          type: string
-        time:
-          type: integer
-          format: int64
-        header:
-          type: array
-          items:
-            type: object
-            required:
-              - name
-              - dtype
-            properties:
-              name:
-                type: string
-              dtype:
-                type: string
-                enum:
-                  - Uri
-                  - Boolean
-                  - Integer
-                  - Double
-                  - String
-        rows:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueryResponseItem'
+      allOf:
+        - $ref: '#/components/schemas/KnowledgeServiceResponse'
+        - type: object
+          required:
+            - header
+            - rows
+          properties:
+            query:
+              type: string
+            header:
+              type: array
+              items:
+               $ref: '#/components/schemas/QueryResponseHeader'
+            rows:
+              type: array
+              items:
+                $ref: '#/components/schemas/QueryResponseItem'
+    QueryResponseHeader:
+        type: object
+        required:
+          - name
+          - dtype
+        properties:
+          name:
+            type: string
+          dtype:
+            type: string
+            enum:
+              - Uri
+              - Boolean
+              - Integer
+              - Double
+              - String
     QueryResponseItem:
       type: object
       required:
@@ -841,16 +850,16 @@ components:
           items:
             $ref: '#/components/schemas/ConceptualMapping'
     FrameResponse:
-      type: object
-      required:
-        - frames
-      properties:
-        frames:
-          type: array
-          items:
-            $ref: '#/components/schemas/Frame'
-        report:
-          type: string
+      allOf:
+          - $ref: '#/components/schemas/KnowledgeServiceResponse'
+          - type: object
+            required:
+              - frames
+            properties:
+              frames:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Frame'
   securitySchemes:
     isagog_auth:
       type: oauth2
