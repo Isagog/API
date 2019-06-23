@@ -122,7 +122,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Concept'
+                $ref: '#/components/schemas/OntologyElement'
       tags:
         - KnowledgeService
   /concept/{oid}/{cid}/definition:
@@ -149,7 +149,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Concept'
+                  $ref: '#/components/schemas/OntologyElement'
       tags:
         - KnowledgeService
   /graph/{kg}:
@@ -496,17 +496,11 @@ components:
           format: uri
         ontologies:
           type: array
-          xml:
-            name: ontologies
-            wrapped: true
           items:
             type: string
             format: uri
         accessible:
           type: array
-          xml:
-            name: accessible
-            wrapped: true
           items:
             type: string
             format: uri
@@ -515,9 +509,6 @@ components:
           format: int32
         content:
           type: array
-          xml:
-            name: item
-            wrapped: true
           items:
             $ref: '#/components/schemas/KnowledgeItem'
     KnowledgeUpdate:
@@ -580,7 +571,7 @@ components:
         - classifier
       properties:
         classifier:
-          $ref: '#/components/schemas/Concept'
+          $ref: '#/components/schemas/OntologyElement'
         support:
           $ref: '#/components/schemas/Support'
     QueryResponse:
@@ -626,7 +617,7 @@ components:
           type: array
           items:
             type: string
-    Concept:
+    OntologyElement:
       type: object
       required:
         - id
@@ -636,25 +627,11 @@ components:
         meta:
           type: string
           enum:
-            - AtomicConcept
-            - RelativeConcept
-            - AttributiveConcept
-            - NegativeConcept
-            - EnumerativeConcept
-            - ConjunctiveConcept
-            - IndividualConcept
-    Relation:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          type: string
-        meta:
-          type: string
-          enum:
+            - Concept
             - Property
             - Attribute
+            - Entity
+
     Ontology:
       type: object
       required:
@@ -677,15 +654,10 @@ components:
       required:
         - id
         - ftype
-        - intents
         - slots
       properties:
         id:
           type: string
-        intents:
-          type: array
-          items:
-            type: string
         ftype:
           type: string
           enum:
@@ -697,7 +669,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Slot'
-
+        intents:
+          type: array
+          items:
+            type: string
         support:
           $ref: '#/components/schemas/Support'
     Slot:
@@ -711,23 +686,11 @@ components:
           type: string
         stype:
           type: string
-          enum:
-            - Classification
-            - Relation
-            - Attribute
         mandatory:
           type: boolean
-        pragType:
-          type: string
-          enum:
-            - Out
-            - OptMinus
-            - OptPlus
-            - OptAvg
-            - OutOptMinus
-            - OutOptPlus
-            - OutOptAvg
-            - Any
+        distinguished:
+          type: boolean
+          default: false
         lexicalAnnotations:
           type: array
           items:
@@ -735,10 +698,6 @@ components:
         ontologyReference:
           type: string
           format: uri
-        subjectBinding:
-          type: string
-        objectBinding:
-          type: string
         values:
           type: array
           items:
@@ -750,14 +709,60 @@ components:
         support:
           $ref: '#/components/schemas/Support'
         sentenceMapping:
-          type: object
-          properties:
-            startIndex:
-              type: integer
-              format: int32
-            endIndex:
-              type: integer
-              format: int32
+          $ref: '#/components/schemas/SlotSentenceMapping'
+      discriminator:
+        propertyName: stype
+        mapping:
+          CLASSIFICATION: '#/components/schemas/ConceptualSlot'
+          RELATION: '#/components/schemas/RelationalSlot'
+          ATTRIBUTE: '#/components/schemas/AttributiveSlot'
+
+
+    SlotSentenceMapping:
+      type: object
+      required:
+        - startIndex
+        - endIndex
+      properties:
+          startIndex:
+            type: integer
+            format: int32
+          endIndex:
+            type: integer
+            format: int32
+
+    ConceptualSlot:
+     allOf:
+      - $ref: '#/components/schemas/Slot'
+
+    RelationalSlot:
+     allOf:
+       - $ref: '#/components/schemas/Slot'
+       - type: object
+         properties:
+           subjectBinding:
+             type: string
+           objectBinding:
+            type: string
+            format: uri
+         required:
+            - subjectBinding
+
+    AttributiveSlot:
+     allOf:
+       - $ref: '#/components/schemas/Slot'
+       - type: object
+         properties:
+           subjectBinding:
+             type: string
+           valueType:
+             type: string
+             enum:
+               - String
+               - Number
+               - Text
+         required:
+           - subjectBinding
     SlotValue:
       type: object
       required:
