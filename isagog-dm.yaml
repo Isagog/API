@@ -224,10 +224,12 @@ components:
           type: integer
           description: The user access level (ignored if null)
           nullable: true
-        area:
-          type: string
-          description: The user access area (ignored if null)
-          nullable: true
+        areas:
+          type: array
+          description: The user access areas
+          items:
+            type: string
+            description: The user access areas
     InputText:
       type: object
       required:
