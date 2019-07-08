@@ -28,7 +28,7 @@ paths:
       summary: Search for answers to a natural language question
       operationId: search
       requestBody:
-        $ref: '#/components/requestBodies/InputText'
+        $ref: '#/components/requestBodies/Search'
       responses:
         200:
           description: Found list of candidate answers
@@ -43,21 +43,34 @@ paths:
           description: Answer not found
 components:
   requestBodies:
-    InputText:
-      description: The input text
+    Search:
+      description: Parameters for the search request
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/InputText'
+            $ref: '#/components/schemas/SearchBody'
   schemas:
-    InputText:
+    SearchBody:
       type: object
       required:
         - text
       properties:
         text:
           type: string
+          description: The user question
+        permission:
+          type: integer
+          description: The user access level (ignored if null)
+          nullable: true
+        area:
+          type: string
+          description: The user access area (ignored if null)
+          nullable: true
+        size:
+          type: integer
+          description: The max number of results returned
+          default: 10
     CandidateAnswer:
       description: a candidate answer
       type: object
