@@ -32,8 +32,8 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/SessionId'
-  /session/{sessionId}:
-    delete:
+  /session/close/{sessionId}:
+    post:
       tags:
         - session
       summary: Close a specific session
