@@ -27,11 +27,13 @@ paths:
         - session
       summary: Create a new session
       operationId: newSession
+      requestBody:
+        $ref: '#/components/requestBodies/SessionInit'
       responses:
         200:
           $ref: '#/components/responses/SessionId'
-  /session/{sessionId}:
-    delete:
+  /session/close/{sessionId}:
+    post:
       tags:
         - session
       summary: Close a specific session
@@ -107,6 +109,13 @@ paths:
           $ref: '#/components/responses/Response'
 components:
   requestBodies:
+    SessionInit:
+      description: Session initialization data
+      required: false
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SessionInit'
     InputText:
       description: The input text
       required: true
@@ -207,6 +216,20 @@ components:
       maxLength: 10
       pattern: '^[a-zA-Z0-9]+$'
       example: BqZci3YbHA
+    SessionInit:
+      type: object
+      description: Session initialization data
+      properties:
+        permission:
+          type: integer
+          description: The user access level (ignored if null)
+          nullable: true
+        areas:
+          type: array
+          description: The user access areas
+          items:
+            type: string
+            description: The user access areas
     InputText:
       type: object
       required:
