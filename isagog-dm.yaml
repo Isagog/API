@@ -104,6 +104,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/SessionId'
         - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/PrettyPrint'
       responses:
         200:
           $ref: '#/components/responses/Response'
@@ -164,6 +165,13 @@ components:
       example: rwgrBqOSSF
       schema:
         $ref: '#/components/schemas/AlphaNumId'
+    PrettyPrint:
+      name: pretty
+      in: query
+      description: if true the JSON response is indented, with newlines, for a better readability
+      allowEmptyValue: true
+      schema:
+        type: boolean
   responses:
     Confirmation:
       description: Confirmation
