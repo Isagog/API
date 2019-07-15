@@ -230,14 +230,18 @@ components:
       properties:
         permission:
           type: integer
-          description: The user access level (ignored if null)
+          description: the user access level (ignored if null)
           nullable: true
         areas:
           type: array
-          description: The user access areas
+          description: the user access areas
           items:
             type: string
-            description: The user access areas
+            description: the user access areas
+        size:
+          type: integer
+          description: the max number of results to return
+          default: 10
     InputText:
       type: object
       required:
