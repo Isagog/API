@@ -1,11 +1,11 @@
 openapi: 3.0.2
 info:
   description: >
-    This is an NLP services server that analyzes a text using the library [KotlinNLP](https://github.com/KotlinNLP).
+    Natural Language Services. Linguistic analysys services derived from [KotlinNLP](https://github.com/KotlinNLP).
   version: 1.0.0
-  title: NLP Services
+  title: Isagog NLP Services
   contact:
-    email: info@kotlinnlp.com
+    email: api@isagog.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html

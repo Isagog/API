@@ -295,7 +295,7 @@ paths:
   /graph/{kg}/frame:
     post:
       summary: Frames a Natural Language sentence
-      description: Retrieves frames evoked by the supplied sentence according to the Knowledge Graph
+      description: Retrieves frames evoked by the supplied sentence according to the Knowledge Graph. Uses isagog-nlp/extract-frames
       parameters:
         - name: kg
           in: path
