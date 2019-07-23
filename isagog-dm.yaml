@@ -104,6 +104,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/SessionId'
         - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/PrettyPrint'
       responses:
         200:
           $ref: '#/components/responses/Response'
@@ -164,6 +165,13 @@ components:
       example: rwgrBqOSSF
       schema:
         $ref: '#/components/schemas/AlphaNumId'
+    PrettyPrint:
+      name: pretty
+      in: query
+      description: if true the JSON response is indented, with newlines, for a better readability
+      allowEmptyValue: true
+      schema:
+        type: boolean
   responses:
     Confirmation:
       description: Confirmation
@@ -222,14 +230,18 @@ components:
       properties:
         permission:
           type: integer
-          description: The user access level (ignored if null)
+          description: the user access level (ignored if null)
           nullable: true
         areas:
           type: array
-          description: The user access areas
+          description: the user access areas
           items:
             type: string
-            description: The user access areas
+            description: the user access areas
+        size:
+          type: integer
+          description: the max number of results to return
+          default: 10
     InputText:
       type: object
       required:
