@@ -27,6 +27,8 @@ paths:
         - dqa
       summary: Search for answers to a natural language question
       operationId: search
+      parameters:
+        - $ref: '#/components/parameters/PrettyPrint'
       requestBody:
         $ref: '#/components/requestBodies/Search'
       responses:
@@ -50,6 +52,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SearchBody'
+  parameters:
+    PrettyPrint:
+      name: pretty
+      in: query
+      description: if true the JSON response is indented, with newlines, for a better readability
+      allowEmptyValue: true
+      schema:
+        type: boolean
   schemas:
     SearchBody:
       type: object
