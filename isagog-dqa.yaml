@@ -65,6 +65,7 @@ components:
       type: object
       required:
         - text
+        - areas
       properties:
         text:
           type: string
