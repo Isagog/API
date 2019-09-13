@@ -661,9 +661,9 @@ components:
         ftype:
           type: string
           enum:
-            - ExtensionQuery
+            - IndividuationQuery
             - CardinalityQuery
-            - AggregationQuery
+            - ExtensionQuery
             - Any
         slots:
           type: array
