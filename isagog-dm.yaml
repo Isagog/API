@@ -345,10 +345,13 @@ components:
     Result:
       type: object
       required:
+        - interfaceId
         - text
         - score
         - documentURI
       properties:
+        interfaceId:
+          type: integer
         text:
           type: string
         score:
