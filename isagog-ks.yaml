@@ -346,7 +346,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FrameResponse'
+                $ref: '#/components/schemas/FrameElaborationResponse'
         400:
           description: Unknown graph
         401:
@@ -917,20 +917,31 @@ components:
           - $ref: '#/components/schemas/KnowledgeServiceResponse'
           - type: object
             required:
+              - frames
+            properties:
+                frames:
+                  type: array
+                  items:
+                     $ref: '#/components/schemas/Frame'
+    FrameElaborationResponse:
+      allOf:
+          - $ref: '#/components/schemas/KnowledgeServiceResponse'
+          - type: object
+            required:
               - operation
               - frame
             properties:
-              operation:
-                type: string
-                enum:
-                  - Instantiation
-                  - SlotInsert
-                  - SlotDelete
-                  - TopicChange
-                  - SlotChangePredicate
-                  - SlotChangeValue
-              frame:
-                  $ref: '#/components/schemas/Frame'
+                operation:
+                  type: string
+                  enum:
+                    - SlotInsert
+                    - SlotDelete
+                    - TopicChange
+                    - SlotChangePredicate
+                    - SlotChangeValue
+                    - Nothing
+                frame:
+                    $ref: '#/components/schemas/Frame'
   securitySchemes:
     isagog_auth:
       type: oauth2
