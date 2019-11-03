@@ -304,7 +304,7 @@ paths:
             type: string
             format: uri
           description: The Knowledge Graph identifier
-      operationId: frameInstantiate
+      operationId: frameSentence
       responses:
         200:
           description: Success
@@ -327,7 +327,7 @@ paths:
               $ref: '#/components/schemas/FrameRequestBody'
         description: The sentence to be analyzed
         required: true
-  /graph/{kg}/frame-elaborate:
+  /graph/{kg}/elaborate:
     post:
       summary: Elaborates on a frame
       description: Emends, integrate, correct a frame instance, based on an utterance (e.g. dialog turn)
@@ -339,7 +339,7 @@ paths:
             type: string
             format: uri
           description: The Knowledge Graph identifier
-      operationId: frameElaborate
+      operationId: elaborateSentence
       responses:
         200:
           description: Success
