@@ -2,7 +2,7 @@ openapi: 3.0.2
 info:
   description: >
     Natural Language Services. Linguistic analysys services derived from [KotlinNLP](https://github.com/KotlinNLP).
-  version: 1.0.0
+  version: 2.0.0
   title: Isagog NLP Services
   contact:
     email: api@isagog.com

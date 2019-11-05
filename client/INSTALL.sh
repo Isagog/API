@@ -3,7 +3,7 @@
 set -e
 
 OUTPUT_DIR="build"
-VERSION="1.0.0"
+VERSION="2.0.0"
 
 if [ -e $OUTPUT_DIR ]
 then
