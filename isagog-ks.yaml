@@ -443,13 +443,13 @@ paths:
           description: Not found
       tags:
         - KnowledgeService
-  /graph/{kg}/search:
+  /graph/{kg}/lookup:
     get:
       tags:
         - KnowledgeService
-      summary: Knowledge Items property search
-      description: Finds Knowledge Items by searching values
-      operationId: searchItem
+      summary: Knowledge entity lookup
+      description: Search knowledge items by matching name and label
+      operationId: lookup
       parameters:
         - name: kg
           in: path
@@ -458,9 +458,47 @@ paths:
             type: string
             format: uri
           description: The Knowledge Graph identifier
-        - name: property
+        - name: key
           in: query
-          description: The property to search by
+          description: The key to search by
+          required: true
+          explode: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeSearchResult'
+        201:
+          description: no results
+        400:
+          description: unknown graph
+        401:
+          description: invalid key
+      security:
+        - isagog_auth_auth:
+            - read:knowledge
+  /graph/{kg}/{attribute}/search:
+    get:
+      tags:
+        - KnowledgeService
+      summary: Knowledge value search
+      description: Search attribute values
+      operationId: search
+      parameters:
+        - name: kg
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uri
+          description: The Knowledge Graph identifier
+        - name: attribute
+          in: path
+          description: The attribute to search by
           required: true
           explode: false
           schema:
