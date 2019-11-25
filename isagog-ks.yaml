@@ -443,13 +443,13 @@ paths:
           description: Not found
       tags:
         - KnowledgeService
-  /graph/{kg}/lookup:
+  /graph/{kg}/search:
     get:
       tags:
         - KnowledgeService
       summary: Knowledge entity lookup
-      description: Search knowledge items by matching name and label
-      operationId: lookup
+      description: Search knowledge items
+      operationId: search
       parameters:
         - name: kg
           in: path
@@ -486,8 +486,8 @@ paths:
       tags:
         - KnowledgeService
       summary: Knowledge value search
-      description: Search attribute values
-      operationId: search
+      description: Search by specific attribute values
+      operationId: searchAttribute
       parameters:
         - name: kg
           in: path
@@ -618,9 +618,20 @@ components:
             items:
               type: array
               items:
-                $ref: '#/components/schemas/KnowledgeItem'
+                $ref: '#/components/schemas/KnowledgeItemScore'
             report:
               type: string
+    KnowledgeItemScore:
+      type: object
+      required:
+        - item
+      properties:
+          item:
+            $ref: '#/components/schemas/KnowledgeItem'
+          score:
+            type: number
+            format: double
+            default: 1.0
     ClassificationResponse:
       allOf:
         - $ref: '#/components/schemas/KnowledgeServiceResponse'
