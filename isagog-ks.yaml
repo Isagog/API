@@ -541,11 +541,20 @@ components:
             type: string
     KnowledgeItem:
       required:
+        - itype
         - subject
         - predicate
         - objects
       type: object
       properties:
+        itype:
+          type: string
+          enum:
+            - Individual
+            - Concept
+            - Relation
+            - Attribute
+            - Frame
         subject:
           type: string
           format: uri
@@ -775,6 +784,7 @@ components:
           type: string
         mandatory:
           type: boolean
+          default: false
         distinguished:
           type: boolean
           default: false
