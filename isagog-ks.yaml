@@ -783,9 +783,15 @@ components:
         stype:
           type: string
         mandatory:
+          description: A slot that must be instantiated
           type: boolean
           default: false
         distinguished:
+          description: A slot that have a specific pragmatic role
+          type: boolean
+          default: false
+        informative:
+          description: A slot that must be presented to consumers
           type: boolean
           default: false
         lexicalAnnotations:
