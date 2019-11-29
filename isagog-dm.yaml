@@ -293,6 +293,7 @@ components:
           FORM: '#/components/schemas/FormRequest'
           WAIT: '#/components/schemas/WaitRequest'
           CLOSE: '#/components/schemas/CloseRequest'
+          END: '#/components/schemas/EndRequest'
     Answer:
       allOf:
         - $ref: '#/components/schemas/Response'
@@ -342,6 +343,15 @@ components:
       allOf:
         - $ref: '#/components/schemas/Response'
     CloseRequest:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          required:
+            - message
+          properties:
+            message:
+              type: string
+    EndRequest:
       allOf:
         - $ref: '#/components/schemas/Response'
         - type: object
