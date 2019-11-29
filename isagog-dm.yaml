@@ -56,6 +56,17 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/RequestId'
+  /dialog/{sessionId}/re-init:
+    post:
+      tags:
+        - dialog
+      summary: Request to reinitialize the dialog
+      operationId: reinitialize
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        200:
+          $ref: '#/components/responses/RequestId'
   /dialog/{sessionId}/input/text:
     post:
       tags:
@@ -281,6 +292,7 @@ components:
           SELECTION: '#/components/schemas/SelectionRequest'
           FORM: '#/components/schemas/FormRequest'
           WAIT: '#/components/schemas/WaitRequest'
+          CLOSE: '#/components/schemas/CloseRequest'
     Answer:
       allOf:
         - $ref: '#/components/schemas/Response'
@@ -329,6 +341,15 @@ components:
     WaitRequest:
       allOf:
         - $ref: '#/components/schemas/Response'
+    CloseRequest:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - type: object
+          required:
+            - message
+          properties:
+            message:
+              type: string
     FormElement:
       type: object
       description: the value given to an element of the form
