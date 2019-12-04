@@ -868,6 +868,14 @@ components:
                - Money
                - Location
                - Name
+           comparation:
+             type: string
+             enum:
+               - Equal
+               - Greater
+               - Smaller
+               - Similar
+             default: Equal
          required:
            - subjectBinding
     SlotValue:
