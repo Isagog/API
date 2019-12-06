@@ -721,13 +721,6 @@ components:
           type: string
         meta:
           type: string
-          enum:
-            - Concept
-            - Relation
-            - Attribute
-            - Entity
-            - Statement
-            - Frame
       discriminator:
         propertyName: meta
         mapping:
