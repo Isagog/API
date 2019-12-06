@@ -393,7 +393,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ontology'
+                $ref: '#/components/schemas/ClassificationResponse'
       tags:
         - KnowledgeService
   /entity/{kg}/{id}/evaluate:
@@ -554,7 +554,6 @@ components:
             - Concept
             - Relation
             - Attribute
-            - Frame
         subject:
           type: string
           format: uri
@@ -636,7 +635,7 @@ components:
         - item
       properties:
           item:
-            $ref: '#/components/schemas/KnowledgeItem'
+            $ref: '#/components/schemas/OntologyElement'
           score:
             type: number
             format: double
@@ -724,9 +723,32 @@ components:
           type: string
           enum:
             - Concept
-            - Property
+            - Relation
             - Attribute
             - Entity
+            - Statement
+            - Frame
+      discriminator:
+        propertyName: meta
+        mapping:
+         CONCEPT: '#/components/schemas/Concept'
+         RELATION: '#/components/schemas/Relation'
+         ATTRIBUTE: '#/components/schemas/Attribute'
+         ENTITY: '#/components/schemas/Entity'
+         STATEMENT: '#/components/schemas/KnowledgeItem'
+         FRAME: '#/components/schemas/Frame'
+    Concept:
+      allOf:
+        - $ref: '#/components/schemas/OntologyElement'
+    Relation:
+      allOf:
+      - $ref: '#/components/schemas/OntologyElement'
+    Attribute:
+      allOf:
+        - $ref: '#/components/schemas/OntologyElement'
+    Entity:
+      allOf:
+        - $ref: '#/components/schemas/OntologyElement'
 
     Ontology:
       type: object
