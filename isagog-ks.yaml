@@ -393,7 +393,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ontology'
+                $ref: '#/components/schemas/ClassificationResponse'
       tags:
         - KnowledgeService
   /entity/{kg}/{id}/evaluate:
