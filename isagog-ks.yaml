@@ -634,10 +634,18 @@ components:
       type: object
       required:
         - item
+        - source
       properties:
           item:
             $ref: '#/components/schemas/KnowledgeItem'
+          source:
+            type: string
+            format: uri
           score:
+            type: number
+            format: double
+            default: 1.0
+          confidence:
             type: number
             format: double
             default: 1.0
