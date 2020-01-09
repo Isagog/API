@@ -633,10 +633,18 @@ components:
       type: object
       required:
         - item
+        - source
       properties:
           item:
-            $ref: '#/components/schemas/OntologyElement'
+          $ref: '#/components/schemas/KnowledgeItem'
+          source:
+            type: string
+            format: uri
           score:
+            type: number
+            format: double
+            default: 1.0
+          confidence:
             type: number
             format: double
             default: 1.0
@@ -761,6 +769,7 @@ components:
             type: string
             format: uri
     Frame:
+      description: Pattern of interrelated conceptual elements (slots) which can be instantiated, i.e. filled with actual data
       type: object
       required:
         - id
@@ -777,16 +786,20 @@ components:
             - ExtensionQuery
             - Any
         slots:
+          description: The conceptual element (slot) list
           type: array
           items:
             $ref: '#/components/schemas/Slot'
         intents:
+          description: Intent labels associated to the frame
           type: array
           items:
             type: string
         support:
+          description: Support to the frame instance
           $ref: '#/components/schemas/Support'
     Slot:
+      description: A reference to ontology conceptual elements, with meta information
       type: object
       required:
         - id
@@ -802,7 +815,7 @@ components:
           type: boolean
           default: false
         distinguished:
-          description: A slot that have a specific pragmatic role
+          description: A slot that has a specific pragmatic role
           type: boolean
           default: false
         informative:
@@ -810,23 +823,29 @@ components:
           type: boolean
           default: false
         lexicalAnnotations:
+          description: Lexical attachments
           type: array
           items:
             $ref: '#/components/schemas/LexicalItem'
         ontologyReference:
+          description: The ontology element linked to the slot
           type: string
           format: uri
         values:
+          description: The values of the slot when instantiated
           type: array
           items:
             $ref: '#/components/schemas/SlotValue'
         restrictions:
+          description: Access control tag
           type: array
           items:
             type: string
         support:
+          description: The slot support when instantiated
           $ref: '#/components/schemas/Support'
         sentenceMapping:
+          description: Mapping to the instance's linguistic source
           $ref: '#/components/schemas/SlotSentenceMapping'
       discriminator:
         propertyName: stype
@@ -870,10 +889,13 @@ components:
      allOf:
        - $ref: '#/components/schemas/Slot'
        - type: object
+         description:  A slot bound to an attribute (data property)
          properties:
            subjectBinding:
+             description: The id of the slot pointing to the attribute's subject
              type: string
            valueType:
+             description: Semantics of the attribute's value
              type: string
              enum:
                - String
@@ -883,17 +905,23 @@ components:
                - Money
                - Location
                - Name
+               - Any
+             default: Any
            comparation:
+             description: The comparison operator when instantiated
              type: string
              enum:
                - Equal
                - Greater
                - Smaller
                - Similar
-             default: Equal
+               - Undefined
+             default: Undefined
          required:
            - subjectBinding
+
     SlotValue:
+      description: Slot value instance
       type: object
       required:
         - sourceType
@@ -901,14 +929,19 @@ components:
         - value
       properties:
         sourceType:
+          description: The value provenance
           type: string
           enum:
             - UserInput
             - KnowlegdeBase
+            - Undefined
+          default: Undefined
         valueType:
+          description: The value structural type (uri, scalar value, linguistic token)
           type: string
           enum:
             - Identifier
+            - Value
             - Token
         value:
           type: string
