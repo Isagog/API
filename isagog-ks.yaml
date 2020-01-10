@@ -21,7 +21,7 @@ tags:
     externalDocs:
       description: Find out more
       url: http://isagog.com
-  - name: KnowledgeItem
+  - name: Statement
     description: A Knowledge Item (a Concept, a Role, or an Entity)
   - name: Ontology
     description: Ontologies
@@ -58,7 +58,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KnowledgeItem'
+                $ref: '#/components/schemas/Statement'
         400:
           description: Not found
       tags:
@@ -80,7 +80,7 @@ paths:
           required: true
           schema:
             type: string
-          description: The KnowledgeItem identifier
+          description: The Statement identifier
       operationId: updateItem
       responses:
         200:
@@ -95,7 +95,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/KnowledgeItem'
+              $ref: '#/components/schemas/Statement'
         description: Create or update a Knowledge Item
         required: true
       tags:
@@ -539,7 +539,7 @@ components:
             format: int64
           report:
             type: string
-    KnowledgeItem:
+    Statement:
       required:
         - itype
         - subject
@@ -568,7 +568,7 @@ components:
           items:
             type: string
       xml:
-        name: KnowledgeItem
+        name: Statement
     KnowledgeGraph:
       required:
         - id
@@ -594,7 +594,7 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/KnowledgeItem'
+            $ref: '#/components/schemas/Statement'
     KnowledgeUpdate:
       required:
         - id
@@ -617,7 +617,7 @@ components:
             name: item
             wrapped: true
           items:
-            $ref: '#/components/schemas/KnowledgeItem'
+            $ref: '#/components/schemas/Statement'
     KnowledgeSearchResult:
       allOf:
         - $ref: '#/components/schemas/KnowledgeServiceResponse'
@@ -626,17 +626,17 @@ components:
             items:
               type: array
               items:
-                $ref: '#/components/schemas/KnowledgeItemScore'
+                $ref: '#/components/schemas/StatementScore'
             report:
               type: string
-    KnowledgeItemScore:
+    StatementScore:
       type: object
       required:
         - item
         - source
       properties:
           item:
-            $ref: '#/components/schemas/KnowledgeItem'
+            $ref: '#/components/schemas/Statement'
           source:
             type: string
             format: uri
@@ -720,7 +720,7 @@ components:
           type: array
           items:
             type: string
-    OntologyElement:
+    KnowledgeElement:
       type: object
       required:
         - id
@@ -736,20 +736,20 @@ components:
          RELATION: '#/components/schemas/Relation'
          ATTRIBUTE: '#/components/schemas/Attribute'
          ENTITY: '#/components/schemas/Entity'
-         STATEMENT: '#/components/schemas/KnowledgeItem'
+         STATEMENT: '#/components/schemas/Statement'
          FRAME: '#/components/schemas/Frame'
     Concept:
       allOf:
-        - $ref: '#/components/schemas/OntologyElement'
+        - $ref: '#/components/schemas/KnowledgeElement'
     Relation:
       allOf:
-      - $ref: '#/components/schemas/OntologyElement'
+      - $ref: '#/components/schemas/KnowledgeElement'
     Attribute:
       allOf:
-        - $ref: '#/components/schemas/OntologyElement'
+        - $ref: '#/components/schemas/KnowledgeElement'
     Entity:
       allOf:
-        - $ref: '#/components/schemas/OntologyElement'
+        - $ref: '#/components/schemas/KnowledgeElement'
 
     Ontology:
       type: object
