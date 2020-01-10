@@ -636,7 +636,7 @@ components:
         - source
       properties:
           item:
-          $ref: '#/components/schemas/KnowledgeItem'
+            $ref: '#/components/schemas/KnowledgeItem'
           source:
             type: string
             format: uri
