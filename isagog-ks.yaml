@@ -122,7 +122,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OntologyElement'
+                $ref: '#/components/schemas/KnowledgeElement'
       tags:
         - KnowledgeService
   /concept/{oid}/{cid}/definition:
@@ -149,7 +149,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/OntologyElement'
+                  $ref: '#/components/schemas/KnowledgeElement'
       tags:
         - KnowledgeService
   /graph/{kg}:
@@ -674,7 +674,7 @@ components:
         - classifier
       properties:
         classifier:
-          $ref: '#/components/schemas/OntologyElement'
+          $ref: '#/components/schemas/KnowledgeElement'
         support:
           $ref: '#/components/schemas/Support'
     QueryResponse:
