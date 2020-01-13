@@ -16,27 +16,15 @@ servers:
       basePath:
         default: /
 tags:
-  - name: KnowledgeGraph
-    description: A Knowledge Graph (Knowledge Base Assertional Layer)
-    externalDocs:
-      description: Find out more
-      url: http://isagog.com
-  - name: Statement
-    description: A Knowledge Item (a Concept, a Role, or an Entity)
-  - name: Ontology
-    description: Ontologies
-    externalDocs:
-      description: Find out more
-      url: http://isagog.com
   - name: KnowledgeService
     externalDocs:
       url: http://isagog.com/ks
     description: Isagog Knowledge Service
 paths:
-  /item/{kg}/{id}:
+  /{kg}/{id}:
     get:
-      summary: Path to a Knowledge Item in a Knowledge Graph
-      description: Returns the Knowledge Item with the supplied id
+      summary: Path to a Knowledge Element in a Knowledge Graph
+      description: Returns the knowledge element with the supplied id
       parameters:
         - name: kg
           in: path
@@ -50,21 +38,21 @@ paths:
           required: true
           schema:
             type: string
-          description: The Knowledge Item identifier
-      operationId: getItem
+          description: The Knowledge Element identifier
+      operationId: getElement
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Statement'
+                $ref: '#/components/schemas/KnowledgeElement'
         400:
           description: Not found
       tags:
         - KnowledgeService
-    summary: Path to Knowledge Items
-    description: Addresses a Knowledge Item in a Knowledge Graph
+    summary: Path to Knowledge Elements
+    description: Addresses a Knowledge element in a Knowledge Graph
     post:
       summary: Creates or updates a Knowledge Item
       description: Creates the supplied Knowledge Item or resets its data
@@ -80,8 +68,8 @@ paths:
           required: true
           schema:
             type: string
-          description: The Statement identifier
-      operationId: updateItem
+          description: The Knowledge Element identifier
+      operationId: updateElement
       responses:
         200:
           description: Update successful
@@ -96,46 +84,22 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Statement'
-        description: Create or update a Knowledge Item
+        description: Create or update a Knowledge element
         required: true
       tags:
         - KnowledgeService
-  /concept/{oid}/{cid}:
+
+  /{kg}/{id}/definition:
     get:
-      summary: Ontology concept
-      description: Get the path to a concept in an Ontology
+      summary: Knowledge element definition
+      description: Get the list of defining elements, i.e. superordinates of classifiers or classifiers for individuals
       parameters:
-        - name: oid
+        - name: kg
           in: path
           required: true
           schema:
             type: string
-        - name: cid
-          in: path
-          required: true
-          schema:
-            type: string
-      operationId: getConcept
-      responses:
-        200:
-          description: Description
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/KnowledgeElement'
-      tags:
-        - KnowledgeService
-  /concept/{oid}/{cid}/definition:
-    get:
-      summary: Concept definition
-      description: Get the list of defining (i.e. immediately superordinate) concepts
-      parameters:
-        - name: oid
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: cid
+        - name: id
           in: path
           required: true
           schema:
@@ -152,7 +116,7 @@ paths:
                   $ref: '#/components/schemas/KnowledgeElement'
       tags:
         - KnowledgeService
-  /graph/{kg}:
+  /{kg}:
     get:
       tags:
         - KnowledgeService
@@ -222,7 +186,7 @@ paths:
       tags:
         - KnowledgeService
 
-  /graph/{kg}/framequery:
+  /{kg}/framequery:
     post:
       summary: Frame query
       description: Queries a frame in a Knowledge Graph
@@ -257,7 +221,7 @@ paths:
               $ref: '#/components/schemas/Frame'
         description: The conjunctive query
         required: true
-  /graph/{kg}/conceptualize:
+  /{kg}/conceptualize:
     post:
       summary: Conceptualizes a Natural Language sentence
       description: Provides a conceptual account of the supplied sentence according to the Knowledge Graph
@@ -292,7 +256,7 @@ paths:
               $ref: 'isagog-nlp.yaml#/components/schemas/LinguisticAnalysis'
         description: The sentence to be analyzed
         required: true
-  /graph/{kg}/frame:
+  /{kg}/frame:
     post:
       summary: Frames a Natural Language sentence
       description: Retrieves frames evoked by the supplied sentence according to the Knowledge Graph. Uses isagog-nlp/extract-frames
@@ -327,7 +291,7 @@ paths:
               $ref: '#/components/schemas/FrameRequestBody'
         description: The sentence to be analyzed
         required: true
-  /graph/{kg}/elaborate:
+  /{kg}/elaborate:
     post:
       summary: Elaborates on a frame
       description: Emends, integrate, correct a frame instance, based on an utterance (e.g. dialog turn)
@@ -363,9 +327,7 @@ paths:
         description: The sentence to be analyzed
         required: true
 
-
-
-  /entity/{kg}/{id}/classify:
+  /{kg}/{id}/classify:
     get:
       summary: Knowledge Entity (individual) classification
       description: Lists all the classes to which the individual belongs
@@ -394,9 +356,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClassificationResponse'
+        400:
+          description: Unknown graph
+        401:
+            description: Invalid id
       tags:
         - KnowledgeService
-  /entity/{kg}/{id}/evaluate:
+  /{kg}/{id}/evaluate:
     get:
       summary: Knowledge Entity (individual) evaluation
       description: Evaluates the Knowledge Item as an instance of the specified concept
@@ -441,9 +407,13 @@ paths:
                 $ref: '#/components/schemas/ClassificationResponse'
         201:
           description: Not found
+        400:
+          description: Unknown graph
+        401:
+          description: Invalid arguments
       tags:
         - KnowledgeService
-  /graph/{kg}/search:
+  /{kg}/search:
     get:
       tags:
         - KnowledgeService
@@ -481,7 +451,7 @@ paths:
       security:
         - isagog_auth_auth:
             - read:knowledge
-  /graph/{kg}/{attribute}/search:
+  /{kg}/{attribute}/search:
     get:
       tags:
         - KnowledgeService
@@ -532,6 +502,7 @@ externalDocs:
 components:
   schemas:
     KnowledgeServiceResponse:
+      description: Common base for service's response
       type: object
       properties:
           time:
@@ -540,20 +511,22 @@ components:
           report:
             type: string
     Statement:
+      description: Knowledge assertion of the form subject-predicate-object(s). Statements are typed.
       required:
-        - itype
+        - stype
         - subject
         - predicate
         - objects
       type: object
       properties:
-        itype:
+        stype:
+          description: The statement typology
           type: string
           enum:
-            - Individual
-            - Concept
-            - Relation
-            - Attribute
+            - IndividualAssertion
+            - ConceptDeclaration
+            - RelationDeclaration
+            - AttributeDeclaration
         subject:
           type: string
           format: uri
@@ -570,6 +543,7 @@ components:
       xml:
         name: Statement
     KnowledgeGraph:
+      description: A structure of interlinked knowledge statements
       required:
         - id
         - content
@@ -619,6 +593,7 @@ components:
           items:
             $ref: '#/components/schemas/Statement'
     KnowledgeSearchResult:
+      description: The result of a search operation
       allOf:
         - $ref: '#/components/schemas/KnowledgeServiceResponse'
         - type: object
@@ -626,28 +601,23 @@ components:
             items:
               type: array
               items:
-                $ref: '#/components/schemas/StatementScore'
+                $ref: '#/components/schemas/Retrieval'
             report:
               type: string
-    StatementScore:
+    Retrieval:
+      description: Element retrieval
       type: object
       required:
         - item
         - source
       properties:
           item:
-            $ref: '#/components/schemas/Statement'
+            $ref: '#/components/schemas/KnowledgeElement'
           source:
             type: string
             format: uri
-          score:
-            type: number
-            format: double
-            default: 1.0
-          confidence:
-            type: number
-            format: double
-            default: 1.0
+          support:
+            $ref: '#/components/schemas/Support'
     ClassificationResponse:
       allOf:
         - $ref: '#/components/schemas/KnowledgeServiceResponse'
@@ -669,6 +639,7 @@ components:
               items:
                 $ref: '#/components/schemas/Classification'
     Classification:
+      description: Element classification
       type: object
       required:
         - classifier
@@ -1001,6 +972,7 @@ components:
         evidence:
           type: number
           format: double
+          default: 0.5
         confidence:
           type: number
           format: double
