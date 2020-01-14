@@ -51,11 +51,11 @@ paths:
           description: Not found
       tags:
         - KnowledgeService
-    summary: Path to Knowledge Elements
-    description: Addresses a Knowledge element in a Knowledge Graph
+
+  /{kg}/{id}/create:
     post:
-      summary: Creates or updates a Knowledge Item
-      description: Creates the supplied Knowledge Item or resets its data
+      summary: Creates a Knowledge Element
+      description: Creates the supplied Knowledge Element
       parameters:
         - name: kg
           in: path
@@ -69,23 +69,86 @@ paths:
           schema:
             type: string
           description: The Knowledge Element identifier
-      operationId: updateElement
+      operationId: createElement
       responses:
         200:
-          description: Update successful
+          description: Create successful
         201:
-          description: Creation successful
-        400:
-          description: Update failed
-        401:
-          description: Creation failed
+          description: Unknown graph
+        202:
+          description: Unknown element
+        203:
+          description: Bad argument
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Statement'
-        description: Create or update a Knowledge element
+        description: Type definition statement
         required: true
+      tags:
+        - KnowledgeService
+
+  /{kg}/{id}/update:
+    post:
+      summary: Updates a Knowledge Element
+      description: Updates the supplied Knowledge Element
+      parameters:
+      - name: kg
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The Knowledge Graph identifier
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The Knowledge Element identifier
+      operationId: updateElement
+      responses:
+        200:
+          description: Update successful
+        201:
+          description: Unknown graph
+        202:
+          description: Unknown element
+        203:
+          description: Bad argument
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Statement'
+        description: Update stetement
+        required: true
+      tags:
+        - KnowledgeService
+
+  /{kg}/{id}/delete:
+    get:
+      summary: Knowledge element deletion
+      description: Removes the Knowledge Element and retracts all the statements depending on it
+      parameters:
+        - name: kg
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: deleteElement
+      responses:
+        200:
+          description: Success
+        201:
+          description: Unknown graph
+        202:
+          description: Unknown element
       tags:
         - KnowledgeService
 
@@ -364,8 +427,8 @@ paths:
         - KnowledgeService
   /{kg}/{id}/evaluate:
     get:
-      summary: Knowledge Entity (individual) evaluation
-      description: Evaluates the Knowledge Item as an instance of the specified concept
+      summary: Entity (individual) evaluation
+      description: Evaluates the Entity as an instance of the specified concept
       parameters:
         - name: kg
           in: path
@@ -379,7 +442,7 @@ paths:
           required: true
           schema:
             type: string
-          description: The entity identifier
+          description: The Entity identifier
         - name: concept
           in: query
           required: true
@@ -511,7 +574,7 @@ components:
           report:
             type: string
     Statement:
-      description: Knowledge assertion of the form subject-predicate-object(s). Statements are typed.
+      description: Knowledge assertion as triple subject-predicate-object(s)
       required:
         - stype
         - subject
@@ -520,13 +583,16 @@ components:
       type: object
       properties:
         stype:
-          description: The statement typology
+          description: The statement type based the statements's formal import
           type: string
           enum:
             - IndividualAssertion
             - ConceptDeclaration
             - RelationDeclaration
             - AttributeDeclaration
+            - InclusionAxiom
+            - DisjunctionAxiom
+            - EquivalenceAxiom
         subject:
           type: string
           format: uri
@@ -550,22 +616,27 @@ components:
       type: object
       properties:
         id:
+          description: The Knowledge Graph id (URI)
           type: string
           format: uri
         ontologies:
+          description: The ontologies the Graph is based on (URIs)
           type: array
           items:
             type: string
             format: uri
         accessible:
+          description: The Graphs accessible from this one (URIs)
           type: array
           items:
             type: string
             format: uri
         size:
+          description: The Graphs element count
           type: integer
           format: int32
         content:
+          description: The Graphs elements as statements
           type: array
           items:
             $ref: '#/components/schemas/Statement'
@@ -849,6 +920,7 @@ components:
        - type: object
          properties:
            subjectBinding:
+             description: The id of the slot representing the attribute's subject
              type: string
            objectBinding:
             type: string
@@ -863,7 +935,7 @@ components:
          description:  A slot bound to an attribute (data property)
          properties:
            subjectBinding:
-             description: The id of the slot pointing to the attribute's subject
+             description: The id of the slot representing the attribute's subject
              type: string
            valueType:
              description: Semantics of the attribute's value
