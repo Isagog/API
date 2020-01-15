@@ -303,7 +303,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ConceptualMapping'
+                $ref: '#/components/schemas/ConceptualAnnotation'
         400:
           description: Unknown graph
         401:
@@ -640,29 +640,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Statement'
-    KnowledgeUpdate:
-      required:
-        - id
-        - operation
-        - content
-      type: object
-      properties:
-        id:
-          type: string
-          format: uri
-        operation:
-          type: string
-          enum:
-            - Delete
-            - Update
-            - Create
-        content:
-          type: array
-          xml:
-            name: item
-            wrapped: true
-          items:
-            $ref: '#/components/schemas/Statement'
+
     KnowledgeSearchResult:
       description: The result of a search operation
       allOf:
@@ -673,14 +651,12 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Retrieval'
-            report:
-              type: string
+
     Retrieval:
-      description: Element retrieval
+      description: Knowledge Element retrieval record
       type: object
       required:
         - item
-        - source
       properties:
           item:
             $ref: '#/components/schemas/KnowledgeElement'
@@ -694,23 +670,18 @@ components:
         - $ref: '#/components/schemas/KnowledgeServiceResponse'
         - type: object
           properties:
-            time:
-              type: integer
-              format: int64
             method:
               type: string
               enum:
                 - Deduction
                 - Abduction
               default: Deduction
-            report:
-              type: string
             result:
               type: array
               items:
                 $ref: '#/components/schemas/Classification'
     Classification:
-      description: Element classification
+      description: Knowledge Element classification record
       type: object
       required:
         - classifier
@@ -720,6 +691,7 @@ components:
         support:
           $ref: '#/components/schemas/Support'
     QueryResponse:
+      description: Query result set
       allOf:
         - $ref: '#/components/schemas/KnowledgeServiceResponse'
         - type: object
@@ -738,6 +710,7 @@ components:
               items:
                 $ref: '#/components/schemas/QueryResponseItem'
     QueryResponseHeader:
+        description: Query result set header
         type: object
         required:
           - name
@@ -754,6 +727,7 @@ components:
               - Double
               - String
     QueryResponseItem:
+      description: Query result set row
       type: object
       required:
         - row
@@ -763,6 +737,7 @@ components:
           items:
             type: string
     KnowledgeElement:
+      description: Common class of Knowledge Elements
       type: object
       required:
         - id
@@ -781,35 +756,22 @@ components:
          STATEMENT: '#/components/schemas/Statement'
          FRAME: '#/components/schemas/Frame'
     Concept:
+      description: Unary classifier
       allOf:
         - $ref: '#/components/schemas/KnowledgeElement'
     Relation:
+      description: Binary classifier of entity pairs
       allOf:
       - $ref: '#/components/schemas/KnowledgeElement'
     Attribute:
+      description: Binary classifier of entity-value pairs
       allOf:
         - $ref: '#/components/schemas/KnowledgeElement'
     Entity:
+      description: Individual entity
       allOf:
         - $ref: '#/components/schemas/KnowledgeElement'
 
-    Ontology:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          type: string
-          format: uri
-        label:
-          type: string
-        description:
-          type: string
-        imports:
-          type: array
-          items:
-            type: string
-            format: uri
     Frame:
       description: Pattern of interrelated conceptual elements (slots) which can be instantiated, i.e. filled with actual data
       type: object
@@ -988,7 +950,8 @@ components:
             - Token
         value:
           type: string
-    ConceptualMapping:
+    ConceptualAnnotation:
+      description: A map of Knowledge Elements occurring in a sentence
       type: object
       required:
         - elements
@@ -996,13 +959,14 @@ components:
         elements:
           type: array
           items:
-            $ref: '#/components/schemas/ConceptualMappingElement'
+            $ref: '#/components/schemas/ConceptualAnnotationElement'
         sentenceId:
           type: integer
           format: int32
         report:
           type: string
-    ConceptualMappingElement:
+    ConceptualAnnotationElement:
+      description: The element of a conceptual annotation
       type: object
       required:
         - concept
@@ -1010,15 +974,7 @@ components:
         - endIndex
       properties:
         concept:
-          type: string
-          format: uri
-        semType:
-          type: string
-          enum:
-            - Concept
-            - Relation
-            - Attribute
-            - Entity
+          $ref: '#/components/schemas/KnowledgeElement'
         startIndex:
           type: integer
           format: int32
@@ -1060,7 +1016,7 @@ components:
         concepts:
           type: array
           items:
-            $ref: '#/components/schemas/ConceptualMapping'
+            $ref: '#/components/schemas/ConceptualAnnotation'
     FrameElaborationBody:
       type: object
       required:
@@ -1076,7 +1032,7 @@ components:
         concepts:
           type: array
           items:
-             $ref: '#/components/schemas/ConceptualMapping'
+             $ref: '#/components/schemas/ConceptualAnnotation'
     FrameResponse:
       allOf:
           - $ref: '#/components/schemas/KnowledgeServiceResponse'
