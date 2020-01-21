@@ -21,7 +21,7 @@ tags:
       url: http://isagog.com/ks
     description: Isagog Knowledge Service
 paths:
-  /{kg}/{id}:
+  /{kg}/{id}/get:
     get:
       summary: Path to a Knowledge Element in a Knowledge Graph
       description: Returns the knowledge element with the supplied id
