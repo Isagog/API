@@ -31,7 +31,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uri
           description: The Knowledge Graph identifier
         - name: id
           in: path
@@ -192,7 +191,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uri
           description: The Knowledge Graph identifier
         - name: content
           in: query
@@ -200,7 +198,7 @@ paths:
           schema:
             type: boolean
             default: false
-          description: 'triggers full content: default = false'
+          description: 'Triggers full content: default = false'
           allowEmptyValue: true
       responses:
         200:

@@ -1,0 +1,141 @@
+openapi: 3.0.0
+info:
+  title: Isagog Data Gateway
+  version: 2.0.0
+  description: |
+    Interface for external data endpoints
+  contact:
+    email: api@isagog.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost
+    variables:
+      port:
+        default: '3300'
+      basePath:
+        default: /v1
+tags:
+    - name: DataGateway
+      description: Query data endpoints
+paths:
+  /search:
+    post:
+      tags:
+        - DataGateway
+      summary: Search for answers to a natural language question
+      operationId: search
+      parameters:
+        - $ref: '#/components/parameters/PrettyPrint'
+      requestBody:
+        $ref: '#/components/requestBodies/Search'
+      responses:
+        200:
+          description: Found list of candidate answers
+          content:
+            application/json:
+              schema:
+                description: a ranked list of candidate answers
+                type: array
+                items:
+                  $ref: '#/components/schemas/CandidateAnswer'
+        500:
+          description: Answer not found
+  /queryframe:
+    post:
+      summary: Frame query
+      description: Queries a frame
+      parameters:
+        - name: domain
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uri
+          description: The area identifier
+      operationId: queryFrame
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: 'isagog-ks.yaml#/components/schemas/QueryResponse'
+        300:
+          description: Not supported
+        400:
+          description: Unknown graph
+        401:
+          description: Invalid query
+        402:
+          description: Service unavailable
+      tags:
+        - DataGateway
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'isagog-ks.yaml#/components/schemas/Frame'
+        description: The frame to be queried
+        required: true
+
+components:
+  requestBodies:
+    Search:
+      description: Parameters for the search request
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SearchBody'
+  parameters:
+    PrettyPrint:
+      name: pretty
+      in: query
+      description: if true the JSON response is indented, with newlines, for a better readability
+      allowEmptyValue: true
+      schema:
+        type: boolean
+  schemas:
+    SearchBody:
+      type: object
+      required:
+        - text
+        - areas
+      properties:
+        text:
+          type: string
+          description: The user question
+        permission:
+          type: integer
+          description: The user access level (ignored if null)
+          nullable: true
+        areas:
+          type: array
+          description: The user access areas
+          items:
+            type: string
+            description: The user access areas
+        size:
+          type: integer
+          description: The max number of results returned
+          default: 10
+    CandidateAnswer:
+      description: a candidate answer
+      type: object
+      required:
+        - text
+        - docref
+        - score      
+      properties:
+        text:
+          description: Answer Text
+          type: string
+        docref:
+          description: Pathname of the Source Document
+          type: string
+        score:
+          description: Confidence Score for the Answer
+          type: number
+          format: float
