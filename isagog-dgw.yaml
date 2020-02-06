@@ -42,7 +42,7 @@ paths:
                   $ref: '#/components/schemas/CandidateAnswer'
         500:
           description: Answer not found
-  /queryframe:
+  /query:
     post:
       summary: Frame query
       description: Queries a frame
