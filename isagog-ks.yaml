@@ -734,6 +734,8 @@ components:
           type: array
           items:
             type: string
+        support:
+          $ref: '#/components/schemas/Support'
     KnowledgeElement:
       description: Common class of Knowledge Elements
       type: object
