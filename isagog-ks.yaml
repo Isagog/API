@@ -729,6 +729,7 @@ components:
       type: object
       required:
         - row
+        - support
       properties:
         row:
           type: array
@@ -996,14 +997,16 @@ components:
       type: object
       required:
         - evidence
+        - confidence
       properties:
         evidence:
           type: number
           format: double
-          default: 0.5
+          default: 1.0
         confidence:
           type: number
           format: double
+          default: 1.0
     FrameRequestBody:
       type: object
       required:
