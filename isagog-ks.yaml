@@ -696,6 +696,8 @@ components:
           required:
             - header
             - rows
+            - report
+            - query
           properties:
             query:
               type: string
@@ -810,6 +812,10 @@ components:
         - id
         - stype
         - ontologyReference
+        - mandatory
+        - distinguished
+        - lexicalAnnotations
+        - values
       properties:
         id:
           type: string
@@ -988,6 +994,7 @@ components:
       type: object
       required:
         - form
+        - pos
       properties:
         form:
           type: string
