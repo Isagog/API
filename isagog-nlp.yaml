@@ -180,6 +180,92 @@ paths:
           $ref: '#/components/responses/Comparison'
         400:
           description: Invalid input
+  /morpho/numbers:
+    post:
+      tags:
+        - NLPService
+      summary: Search for numerical expressions in a text
+      operationId: getNumbers
+      parameters:
+        - name: pretty
+          in: query
+          description: whether to indent the returned JSON string, for a major readability
+          required: false
+          schema:
+            type: boolean
+            default: false
+      requestBody:
+        $ref: '#/components/requestBodies/InputText'
+      responses:
+        200:
+          $ref: '#/components/responses/Numbers'
+        400:
+          description: Invalid input
+  /morpho/numbers/{language}:
+    post:
+      tags:
+        - NLPService
+      summary: Search for numerical expressions in a text written in a given language
+      operationId: getLangNumbers
+      parameters:
+        - $ref: '#/components/parameters/LanguageISO'
+        - name: pretty
+          in: query
+          description: whether to indent the returned JSON string, for a major readability
+          required: false
+          schema:
+            type: boolean
+            default: false
+      requestBody:
+        $ref: '#/components/requestBodies/InputText'
+      responses:
+        200:
+          $ref: '#/components/responses/Numbers'
+        400:
+          description: Invalid input
+  /morpho/datetimes:
+    post:
+      tags:
+        - NLPService
+      summary: Search for date-time expressions in a text
+      operationId: getDateTimes
+      parameters:
+        - name: pretty
+          in: query
+          description: whether to indent the returned JSON string, for a major readability
+          required: false
+          schema:
+            type: boolean
+            default: false
+      requestBody:
+        $ref: '#/components/requestBodies/InputText'
+      responses:
+        200:
+          $ref: '#/components/responses/DateTimes'
+        400:
+          description: Invalid input
+  /morpho/datetimes/{language}:
+    post:
+      tags:
+        - NLPService
+      summary: Search for date-time expressions in a text, written in a given language
+      operationId: getLangDateTimes
+      parameters:
+        - $ref: '#/components/parameters/LanguageISO'
+        - name: pretty
+          in: query
+          description: whether to indent the returned JSON string, for a major readability
+          required: false
+          schema:
+            type: boolean
+            default: false
+      requestBody:
+        $ref: '#/components/requestBodies/InputText'
+      responses:
+        200:
+          $ref: '#/components/responses/DateTimes'
+        400:
+          description: Invalid input
 components:
   parameters:
     DomainId:
@@ -189,6 +275,13 @@ components:
       required: true
       schema:
         type: string
+    LanguageISO:
+      name: language
+      in: path
+      description: the ISO 639-1 code of a language
+      required: true
+      schema:
+        $ref: '#/components/schemas/LanguageISO'
   requestBodies:
     InputText:
       description: the input text
@@ -222,6 +315,24 @@ components:
             description: the comparison between a text and others
             items:
               $ref: '#/components/schemas/ScoredId'
+    Numbers:
+      description: numbers searched successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            description: the numerical expressions found in the input text
+            items:
+              $ref: '#/components/schemas/NumExpr'
+    DateTimes:
+      description: date-times searched successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            description: the date-time expressions found in the input text
+            items:
+              $ref: '#/components/schemas/DateTimeExpr'
   schemas:
     InputText:
       type: object
@@ -234,7 +345,8 @@ components:
         id:
           type: integer
           format: int32
-          default: 0
+          nullable: true
+          default: null
     ExtractFramesResponse:
       type: object
       required:
@@ -345,7 +457,7 @@ components:
         dateTimes:
           type: array
           items:
-            $ref: '#/components/schemas/DateTimeObj'
+            $ref: '#/components/schemas/DateTimeExpr'
         entities:
           type: array
           items:
@@ -600,71 +712,342 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Sentence'
-    DateTimeObj:
+    NumExpr:
+      type: object
+      description: a numerical expression
+      required:
+        - value
+        - asWord
+        - original
+        - startToken
+        - endToken
+        - startChar
+        - endChar
+      properties:
+        value:
+          type: number
+          description: the numeric value
+        asWord:
+          type: string
+          description: the standard representation of the number in letters
+        original:
+          type: string
+          description: the original string representing the number
+        startToken:
+          type: integer
+          format: int32
+          description: the index of the first token of this expression, within the tokens list
+        endToken:
+          type: integer
+          format: int32
+          description: the index of the last token of this expression, within the tokens list
+        startChar:
+          type: integer
+          format: int32
+          description: the index of the first char of this expression in the original text
+        endChar:
+          type: integer
+          format: int32
+          description: the index of the last char of this expression in the original text
+    DateTimeExpr:
       type: object
       description: a date-time expression
       required:
         - type
-        - sentences
+        - startToken
+        - endToken
+        - startChar
+        - endChar
       properties:
         type:
           type: string
-        sentences:
-          type: array
-          items:
-            $ref: '#/components/schemas/Sentence'
+        startToken:
+          type: integer
+          format: int32
+          description: the index of the first token of this expression, within the tokens list
+        endToken:
+          type: integer
+          format: int32
+          description: the index of the last token of this expression, within the tokens list
+        startChar:
+          type: integer
+          format: int32
+          description: the index of the first char of this expression in the original text
+        endChar:
+          type: integer
+          format: int32
+          description: the index of the last char of this expression in the original text
       discriminator:
         propertyName: type
         mapping:
-          dateTime: '#/components/schemas/DateTimeSimple'
-          offset: '#/components/schemas/Offset'
-          interval: '#/components/schemas/Interval'
+          DATE: '#/components/schemas/DateSimple'
+          HOLIDAY: '#/components/schemas/Holiday'
+          TIME: '#/components/schemas/Time'
+          DATE_TIME: '#/components/schemas/DateTimeSimple'
+          ORDINAL: '#/components/schemas/DateOrdinal'
+          ORDINAL_DATE: '#/components/schemas/DateOrdinalDate'
+          OFFSET: '#/components/schemas/Offset'
+          OFFSET_DATE: '#/components/schemas/OffsetDate'
+          OFFSET_TIME: '#/components/schemas/OffsetTime'
+          DATE_OFFSET: '#/components/schemas/DateOffset'
+          INTERVAL_OPEN_TO: '#/components/schemas/Interval'
+          INTERVAL_OPEN_FROM: '#/components/schemas/Interval'
+          INTERVAL_CLOSE: '#/components/schemas/Interval'
+    SingleDateTime:
+      allOf:
+        - $ref: '#/components/schemas/DateTimeExpr'
+        - type: object
+          description: a single date-time expression
+          required:
+            - isoFormat
+          properties:
+            isoFormat:
+              type: string
+              description: the date-time formatted in 'TZ' ISO format
+              format: date-time
+              example: '2018-01-13T09:15:00Z'
+    DateSimple:
+      allOf:
+        - $ref: '#/components/schemas/SingleDateTime'
+        - type: object
+          description: an expression of a date
+          properties:
+            day:
+              type: integer
+              format: int32
+              description: the number of the day
+              minimum: 1
+              maximum: 31
+              nullable: true
+            weekDay:
+              type: integer
+              format: int32
+              description: the number of the week day in the range
+              minimum: 1
+              maximum: 7
+              nullable: true
+            month:
+              type: integer
+              format: int32
+              description: the number of the month
+              minimum: 1
+              maximum: 12
+              nullable: true
+            year:
+              type: integer
+              format: int32
+              description: the number of the year
+              nullable: true
+            yearAbbr:
+              type: boolean
+              description: whether the year is intended as abbreviated form (e.g. '98 stands for 1998)
+            yearFull:
+              type: integer
+              format: int32
+              description: >
+                The full number of the year.
+                In case of abbreviation, from '0 to '50 it becomes 20XX, otherwise 19XX.
+              nullable: true
+    HolidayEnum:
+      type: string
+      description: the name of a holiday
+      example: CHRISTMAS
+      enum:
+        - CHRISTMAS
+        - CHRISTMAS_EVE
+        - EASTER
+    Holiday:
+      allOf:
+        - $ref: '#/components/schemas/SingleDateTime'
+        - type: object
+          description: an expression of a holiday
+          required:
+            - holiday
+          properties:
+            holiday:
+              $ref: '#/components/schemas/HolidayEnum'
+    GenericMoment:
+      type: string
+      description: a generic moment of the day
+      example: MORNING
+      nullable: true
+      enum:
+        - MORNING
+        - NOON
+        - AFTERNOON
+        - EVENING
+        - NIGHT
+    Time:
+      allOf:
+        - $ref: '#/components/schemas/SingleDateTime'
+        - type: object
+          description: an expression of a time
+          properties:
+            hour:
+              type: integer
+              format: int32
+              description: the number of the hour
+              minimum: 0
+              maximum: 23
+              nullable: true
+            min:
+              type: integer
+              format: int32
+              description: the number of the minute
+              minimum: 0
+              maximum: 59
+              nullable: true
+            sec:
+              type: integer
+              format: int32
+              description: the number of the second
+              minimum: 0
+              maximum: 59
+              nullable: true
+            millisec:
+              type: integer
+              format: int32
+              description: the number of the millisecond
+              minimum: 0
+              maximum: 999
+              nullable: true
+            generic:
+              $ref: '#/components/schemas/GenericMoment'
+            timezone:
+              type: string
+              description: the timezone ID
+              example: Europe/Rome
     DateTimeSimple:
       allOf:
-        - $ref: '#/components/schemas/DateTimeObj'
+        - $ref: '#/components/schemas/SingleDateTime'
         - type: object
-          description: a specific date-time expression
+          description: an expression of a date and a time
           required:
-            - isoFormat
+            - date
+            - time
           properties:
-            isoFormat:
-              type: string
-              description: the date-time formatted in 'TZ' ISO format
-              format: date-time
-              example: '2018-01-13T09:15:00Z'
+            date:
+              $ref: '#/components/schemas/DateSimple'
+            time:
+              $ref: '#/components/schemas/Time'
+    DateOrdinalUnit:
+      type: string
+      description: the date unit
+      example: DAY
+      enum:
+        - DATE
+        - DAY
+        - WEEK
+        - WEEKEND
+        - MONTH
+    DateOrdinal:
+      allOf:
+        - $ref: '#/components/schemas/SingleDateTime'
+        - type: object
+          description: an ordinal date
+          required:
+            - unit
+            - position
+            - dateTime
+            - hasYearReference
+          properties:
+            unit:
+              $ref: '#/components/schemas/DateOrdinalUnit'
+            position:
+              type: integer
+              format: int32
+              description: the ordinal position (-1 means 'last')
+            dateTime:
+              $ref: '#/components/schemas/SingleDateTime'
+            hasYearReference:
+              type: boolean
+              description: >
+                whether the reference date-time indicates a whole year (e.g. "the first Monday of the next year")
+    DateOrdinalDate:
+      allOf:
+        - $ref: '#/components/schemas/DateOrdinal'
+        - type: object
+          description: an ordinal date of date units
+          required:
+            - value
+          properties:
+            value:
+              $ref: '#/components/schemas/DateSimple'
+    OffsetUnitsType:
+      type: string
+      description: the type of the offset units
+      example: QUARTER_HOUR
+      enum:
+        - DATE
+        - TIME
+        - HOUR
+        - QUARTER_HOUR
+        - HALF_HOUR
+        - MINUTE
+        - SECOND
+        - DAY
+        - WEEK
+        - WEEKEND
+        - MONTH
+        - YEAR
     Offset:
       allOf:
-        - $ref: '#/components/schemas/DateTimeObj'
+        - $ref: '#/components/schemas/SingleDateTime'
         - type: object
-          description: an offset of date or time
+          description: an offset respect to a reference date or time
           required:
-            - isoFormat
-            - seconds
+            - units
+            - unitsType
           properties:
-            isoFormat:
-              type: string
-              description: the date-time formatted in 'TZ' ISO format
-              format: date-time
-              example: '2018-01-13T09:15:00Z'
-            seconds:
+            units:
               type: integer
               format: int64
+              description: the count of the offset units
+            unitsType:
+              $ref: '#/components/schemas/OffsetUnitsType'
+    OffsetDate:
+      allOf:
+        - $ref: '#/components/schemas/Offset'
+        - type: object
+          description: an offset of date
+          required:
+            - value
+          properties:
+            value:
+              $ref: '#/components/schemas/DateSimple'
+    OffsetTime:
+      allOf:
+        - $ref: '#/components/schemas/Offset'
+        - type: object
+          description: an offset of time
+          required:
+            - value
+          properties:
+            value:
+              $ref: '#/components/schemas/Time'
+    DateOffset:
+      allOf:
+        - $ref: '#/components/schemas/SingleDateTime'
+        - type: object
+          description: a date expressed respect to an offset
+          required:
+            - dateTime
+            - offset
+          properties:
+            dateTime:
+              $ref: '#/components/schemas/SingleDateTime'
+            offset:
+              $ref: '#/components/schemas/Offset'
     Interval:
       allOf:
-        - $ref: '#/components/schemas/DateTimeObj'
+        - $ref: '#/components/schemas/DateTimeExpr'
         - type: object
           description: an interval of date-times (can be open)
           properties:
             from:
-              type: string
-              description: the lower bound of the interval (not present if it is open)
-              format: date-time
-              example: '2018-01-13T09:15:00Z'
+              $ref: '#/components/schemas/DateTimeExpr'
             to:
-              type: string
-              description: the upper bound of the interval (not present if it is open)
-              format: date-time
-              example: '2018-01-13T09:15:00Z'
+              $ref: '#/components/schemas/DateTimeExpr'
     Entity:
       type: object
       description: an entity recognized in the text
