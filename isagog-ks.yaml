@@ -21,10 +21,16 @@ tags:
       url: http://isagog.com/ks
     description: Isagog Knowledge Service
 paths:
-  /{kg}/{id}/get:
+  #
+  #  CRUD OPERATIONS
+  #
+  /{kg}/create:
     get:
-      summary: Path to a Knowledge Element in a Knowledge Graph
-      description: Returns the knowledge element with the supplied id
+      tags:
+        - KnowledgeService
+      summary: Knowledge Graph creation
+      description: Creates a Knowledge Graph
+      operationId: createGraph
       parameters:
         - name: kg
           in: path
@@ -32,153 +38,18 @@ paths:
           schema:
             type: string
           description: The Knowledge Graph identifier
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The Knowledge Element identifier
-      operationId: getElement
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/KnowledgeElement'
-        400:
-          description: Not found
-      tags:
-        - KnowledgeService
 
-  /{kg}/{id}/create:
-    post:
-      summary: Creates a Knowledge Element
-      description: Creates the supplied Knowledge Element
-      parameters:
-        - name: kg
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The Knowledge Graph identifier
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The Knowledge Element identifier
-      operationId: createElement
       responses:
-        200:
-          description: Create successful
-        201:
-          description: Unknown graph
-        202:
-          description: Unknown element
-        203:
-          description: Bad argument
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Statement'
-        description: Type definition statement
-        required: true
-      tags:
-        - KnowledgeService
+          200:
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/KnowledgeGraph'
+          201:
+            description: Invalid id
 
-  /{kg}/{id}/update:
-    post:
-      summary: Updates a Knowledge Element
-      description: Updates the supplied Knowledge Element
-      parameters:
-      - name: kg
-        in: path
-        required: true
-        schema:
-          type: string
-        description: The Knowledge Graph identifier
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-        description: The Knowledge Element identifier
-      operationId: updateElement
-      responses:
-        200:
-          description: Update successful
-        201:
-          description: Unknown graph
-        202:
-          description: Unknown element
-        203:
-          description: Bad argument
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Statement'
-        description: Update stetement
-        required: true
-      tags:
-        - KnowledgeService
-
-  /{kg}/{id}/delete:
-    get:
-      summary: Knowledge element deletion
-      description: Removes the Knowledge Element and retracts all the statements depending on it
-      parameters:
-        - name: kg
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      operationId: deleteElement
-      responses:
-        200:
-          description: Success
-        201:
-          description: Unknown graph
-        202:
-          description: Unknown element
-      tags:
-        - KnowledgeService
-
-  /{kg}/{id}/definition:
-    get:
-      summary: Knowledge element definition
-      description: Get the list of defining elements, i.e. superordinates of classifiers or classifiers for individuals
-      parameters:
-        - name: kg
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      operationId: getDefinition
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/KnowledgeElement'
-      tags:
-        - KnowledgeService
-  /{kg}:
+  /{kg}/get:
     get:
       tags:
         - KnowledgeService
@@ -216,37 +87,128 @@ paths:
             - read:knowledge
     summary: Knowledge Graph
     description: Returns a Knowledge Graph
-    post:
-      summary: Creates or updates a Knowledge Graph
-      description: Creates the supplied Knowledge Graph or resets its data
+
+  /{kg}/{id}/get:
+    get:
+      summary: Gets a Knowledge Element
+      description: Returns the knowledge element with the supplied id
       parameters:
         - name: kg
           in: path
           required: true
           schema:
             type: string
-            format: uri
           description: The Knowledge Graph identifier
-      operationId: updateGraph
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The Knowledge Element identifier
+      operationId: getElement
       responses:
         200:
-          description: Update successful
-        201:
-          description: Creation successful
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeElement'
         400:
-          description: Update failed
-        401:
-          description: Creation failed
+          description: Not found
+      tags:
+        - KnowledgeService
+
+  /{kg}/assert:
+    post:
+      summary: Statement assertion
+      description: Asserts a statement in a Knowledge Graph
+      parameters:
+        - name: kg
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The Knowledge Graph identifier
+      operationId: assert
+      responses:
+        200:
+          description: Create successful
+        201:
+          description: Unknown graph
+        202:
+          description: Bad statement
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/KnowledgeGraph'
-        description: Create or update a Knowledge Graph
+              $ref: '#/components/schemas/Statement'
+        description: Type definition statement
         required: true
       tags:
         - KnowledgeService
 
+
+  /{kg}/retract:
+    post:
+      summary: Statement retraction
+      description: Retracts a statement and all the statements depending on it
+      parameters:
+        - name: kg
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: retract
+      responses:
+        200:
+          description: Success
+        201:
+          description: Unknown graph
+        202:
+          description: Bad statement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Statement'
+      tags:
+        - KnowledgeService
+
+  /{kg}/{id}/knowledge:
+    get:
+      summary: Knowledge about an element
+      description: Get the list of statements relative to a Knowledge Item
+      parameters:
+        - name: kg
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: getKnowledge
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Statement'
+        201:
+          description: Unknown graph
+        202:
+          description: Unknown element
+
+      tags:
+        - KnowledgeService
+  #
+  #  FRAME OPERATIONS
+  #
   /{kg}/framequery:
     post:
       summary: Frame query
@@ -282,6 +244,7 @@ paths:
               $ref: '#/components/schemas/Frame'
         description: The conjunctive query
         required: true
+
   /{kg}/conceptualize:
     post:
       summary: Conceptualizes a Natural Language sentence
